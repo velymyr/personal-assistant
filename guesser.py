@@ -32,6 +32,13 @@ def add(name: str, phone: str):
 def change():
     ...
 
+# example
+
+
+@input_errors
+def show(*args):
+    ...
+
 
 # example
 command_dict = {
