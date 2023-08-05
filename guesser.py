@@ -94,9 +94,8 @@ def parser_input(user_input: str, command_dict) -> tuple():
     return command, arguments
 
 
-if __name__ == "__main__":
+def main():
     filename = "address_book.txt"
-
     try:
         load_address_book(filename)
         print("Address book loaded from file.")
@@ -119,3 +118,7 @@ if __name__ == "__main__":
             else:
                 result = command_handler(user_input, command_dict)
             print(result)
+
+
+if __name__ == "__main__":
+    main()
