@@ -125,12 +125,14 @@ def main():
         print("Address book loaded from file.")
     except FileNotFoundError:
         print("New address book created.")
-
+    print("Please input command or start or menu")
     while True:
+        print("Please make a choice")
         user_input = input('>>> ').lower()
         # input 'menu' or 'start' to show all funcs
         if user_input == 'menu' or user_input == 'start':
             print("How can I help you?\n")
+
             print(instruction(command_dict))
         elif user_input in ('good bye', "close", "exit", "0"):
             # del_file_if_empty()

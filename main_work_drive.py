@@ -105,6 +105,7 @@ def check_email(args):
     pattern = "^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$"
     if re.match (pattern, args):
         email = Email(args)
+    print(email)
     return email
 
 
@@ -114,6 +115,7 @@ def check_phone(args):
         phone = Phone(args)
     else:
         phone = None
+    print(phone)
     return phone
 
 # Видалити запис
