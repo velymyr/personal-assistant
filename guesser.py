@@ -49,6 +49,12 @@ def remove_phone(*args):
     return f"No contact {name} in address book"
 
 
+# @input_errors
+# def save(*args):
+#     if Record.__name__:
+#         return save_address_book
+
+
 @input_errors
 def show_all_command(*args):
     if Record.__name__:
@@ -58,6 +64,7 @@ def show_all_command(*args):
 command_dict = {
     'add': [add, 'add contact'],
     'show': [show_all_command, 'show'],
+    # 'save': [save_address_book, 'save address book'],
     'remove phone': [remove_phone, 'remove phone from contacts'],
     'change': [change, 'change existing contact'],
     'delete contact': [delete_record, 'delete contact']
