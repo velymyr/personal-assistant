@@ -47,11 +47,11 @@ def add_contact(*args):
                     return rec.add_birthday(bd)
             if check_phone(args[i]):
                 # if phone:
-                list_phones.append(rec.add_phone(phone))
+                list_phones.append(rec.add_phone(args[i]))
                 return list_phones
             if check_email(args[i]):
                 # if email:
-                list_emails.append(rec.add_email(email))
+                list_emails.append(rec.add_email(args[i]))
                 return list_emails
         # else:
         #     return "Unknown command"
@@ -61,8 +61,8 @@ def add_contact(*args):
             birthday = bd
             if check_phone(args[i]):
                 # if phone:
-                list_phones.append(phone)
-                phone = list_phones
+                list_phones.append(args[i])
+
             if check_email(args[i]):
                 list_emails.append(args[i])
 

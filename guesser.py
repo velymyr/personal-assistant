@@ -22,7 +22,7 @@ def input_errors(func):
 
 
 @input_errors
-def add(name: str, phone: str):
+def add(*args):
     ...
 
 
