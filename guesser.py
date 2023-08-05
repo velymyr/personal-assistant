@@ -3,7 +3,6 @@ import inspect
 import functools
 from main_work_drive import load_address_book, save_address_book, parser, address_book, exit_command
 from address_book_classes import Record, Name, Phone
-# example
 
 
 def input_errors(func):
@@ -50,12 +49,12 @@ def remove_phone(*args):
     return f"No contact {name} in address book"
 
 
+@input_errors
 def show_all_command(*args):
     if Record.__name__:
         return address_book
 
 
-# example
 command_dict = {
     'add': [add, 'add contact'],
     'show': [show_all_command, 'show'],
