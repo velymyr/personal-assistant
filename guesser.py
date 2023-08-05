@@ -2,7 +2,7 @@ import difflib
 import inspect
 import functools
 from main_work_drive import load_address_book, save_address_book, parser, address_book, exit_command
-
+from address_book_classes import Record
 # example
 
 
@@ -21,28 +21,25 @@ def input_errors(func):
     return wrapper
 
 
-# example
 @input_errors
 def add(name: str, phone: str):
     ...
 
 
-# example
 @input_errors
 def change():
     ...
 
-# example
 
-
-@input_errors
-def show(*args):
-    ...
+def show_all_command(*args):
+    if Record.__name__:
+        return address_book
 
 
 # example
 command_dict = {
     'add': [add, 'add contact'],
+    'show': [show_all_command, 'show'],
     'change': [change, 'change existing contact']
 }
 
@@ -104,7 +101,8 @@ def main():
 
     while True:
         user_input = input('>>> ').lower()
-        if user_input == 'menu' or user_input == 'start':     # input 'menu' or 'start' to show all funcs
+        # input 'menu' or 'start' to show all funcs
+        if user_input == 'menu' or user_input == 'start':
             print("How can I help you?\n")
             print(instruction(command_dict))
         elif user_input in ('good bye', "close", "exit", "0"):
