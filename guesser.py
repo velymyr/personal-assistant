@@ -2,7 +2,7 @@ import difflib
 import inspect
 import functools
 from main_work_drive import load_address_book, save_address_book, parser, address_book, exit_command
-from address_book_classes import Record
+from address_book_classes import Record, Name, Phone
 # example
 
 
@@ -31,6 +31,25 @@ def change():
     ...
 
 
+@input_errors
+def delete_record(*args):
+    name = Name(args[0])
+    if name.value in address_book:
+        del address_book[name.value]
+        return f"Contact '{name}' has been deleted from the address book."
+    return f"No contact '{name}' found in the address book."
+
+
+@input_errors
+def remove_phone(*args):
+    name = Name(args[0])
+    phone = Phone(args[1])
+    rec: Record = address_book.get(str(name))
+    if rec:
+        return rec.remove_phone(phone)
+    return f"No contact {name} in address book"
+
+
 def show_all_command(*args):
     if Record.__name__:
         return address_book
@@ -40,7 +59,9 @@ def show_all_command(*args):
 command_dict = {
     'add': [add, 'add contact'],
     'show': [show_all_command, 'show'],
-    'change': [change, 'change existing contact']
+    'remove phone': [remove_phone, 'remove phone from contacts'],
+    'change': [change, 'change existing contact'],
+    'delete contact': [delete_record, 'delete contact']
 }
 
 

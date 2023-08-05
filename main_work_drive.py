@@ -41,6 +41,7 @@ def add_contact(*args):
     rec: Record = address_book.get(str(name))
     if rec:
         for i in range(1, len(args)):
+            print(args[i])
             if not rec.birthday:
                 bd = check_bd(args[i])
                 if bd:
@@ -192,7 +193,9 @@ def no_command(*args, **kwargs):
 def remove_phone(*args):
     name = Name(args[0])
     phone = Phone(args[1])
+
     rec: Record = address_book.get(str(name))
+    print(rec)
     if rec:
         return rec.remove_phone(phone)
     return f"No contact {name} in address book"
