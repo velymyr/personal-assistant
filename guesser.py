@@ -2,7 +2,25 @@ import difflib
 import inspect
 import functools
 from main_work_drive import load_address_book, save_address_book, parser, address_book, exit_command
-from address_book_classes import Record, Name, Phone
+from address_book_classes import Record, Name, Phone, Birthday, Email, Status, Note, AddressBook
+
+
+# class Bot:
+#     def __init__(self):
+#         self.abook = AddressBook()
+
+# elif action == 'search':
+#     print(
+#         "There are following categories: \nName \nPhones \nBirthday \nEmail \nStatus \nNote")
+#     category = input('Search category: ')
+#     pattern = input('Search pattern: ')
+#     result = (self.book.search(pattern, category))
+#     for account in result:
+#         if account['birthday']:
+#             birth = account['birthday'].strftime("%d/%m/%Y")
+#             result = "_" * 50 + "\n" + \
+#                 f"Name: {account['name']} \nPhones: {', '.join(account['phones'])} \nBirthday: {birth} \nEmail: {account['email']} \nStatus: {account['status']} \nNote: {account['note']}\n" + "_" * 50
+#             print(result)
 
 
 def input_errors(func):
@@ -15,14 +33,22 @@ def input_errors(func):
                 error_message = "Too many arguments provided"
                 return error_message
             else:
-                error_message = str(e).split(':')[1]
+                error_message = str(e).split('/')[1]
                 return f"Give me {error_message}"
     return wrapper
 
 
 @input_errors
 def add(*args):
-    ...
+    name = Name(input("Name: ")).value.strip()
+    phones = Phone().value
+    birth = Birthday().value
+    email = Email().value.strip()
+    status = Status().value.strip()
+    note = Note(input("Note: ")).value
+    record = Record(name=name, phone=phones, birthday=birth,
+                    email=email, status=status, note=note)
+    return address_book.add_record(record)
 
 
 @input_errors
@@ -120,20 +146,22 @@ def parser_input(user_input: str, command_dict) -> tuple():
 
 def main():
     filename = "address_book.txt"
-    try:
-        load_address_book(filename)
-        print("Address book loaded from file.")
-    except FileNotFoundError:
-        print("New address book created.")
+    # try:
+    #     load_address_book(filename)
+    #     print("Address book loaded from file.")
+    # except FileNotFoundError:
+    #     print("New address book created.")
     print("Please input command or start or menu")
     while True:
-        print("Please make a choice")
         user_input = input('>>> ').lower()
+
         # input 'menu' or 'start' to show all funcs
+
         if user_input == 'menu' or user_input == 'start':
             print("How can I help you?\n")
 
             print(instruction(command_dict))
+            print("Please make a choice")
         elif user_input in ('good bye', "close", "exit", "0"):
             # del_file_if_empty()
             print('Good bye!')
