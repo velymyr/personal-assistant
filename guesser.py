@@ -64,14 +64,14 @@ def remove_phone(*args):
 
 
 @input_errors
-def show_all_command(*args):
+def show_address_book(*args):
     if Record.__name__:
         return address_book
 
 
 command_dict = {
     'add': [add, 'add contact'],
-    'show': [show_all_command, 'show'],
+    'show': [show_address_book, 'show'],
     'save': [save_address_book, 'save address book'],
     'remove phone': [remove_phone, 'remove phone from contacts'],
     'change': [change, 'change existing contact'],
