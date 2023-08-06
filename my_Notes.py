@@ -1,5 +1,6 @@
-import pickle
+import difflib
 from collections import UserDict
+import pickle
 from rich.console import Console
 from rich.table import Table
 
@@ -20,6 +21,7 @@ class Tag:
 
     def __setstate__(self, state):
       self.value = state
+
 
 class Tags:
 
@@ -148,8 +150,8 @@ class NoteBook(UserDict):
     
 nb = NoteBook()
 
-def add_note():
 
+def add_note():
     user_input_note = input('Input your note\n>>>')
     user_input_tags = input('Input tags for a note\n>>>')
     user_input_tags = user_input_tags.strip().split()
@@ -162,6 +164,7 @@ def add_note():
     nb.add_note(note, tags)
     return "Note has been added"
 
+
 def delete_note():
         nb.show_notes()
         
@@ -173,20 +176,24 @@ def delete_note():
             if 1 <= x <= len(keys):
                 note_to_delete = keys[x - 1]
                 del nb.data[note_to_delete]
-                print(f"Note '{note_to_delete}' has been deleted.")
+                return(f"Note '{note_to_delete}' has been deleted.")
             else:
-                print("Invalid input. Please choose a valid number.")
+                return("Invalid input. Please choose a valid number.")
         except ValueError:
-            print("Invalid input. Please enter a valid number.")
+            return("Invalid input. Please enter a valid number.")
+
 
 def change_note():
    return nb.change_note()
 
+
 def exit_notes():
-    return "exit"
+    pass
+
 
 def show_notes():
     return nb.show_notes()
+
 
 def search():
     user_choice = input("Enter '1' to search in note\nEnter '2' to search in tags\n>>>")
@@ -198,40 +205,67 @@ def search():
     else:
        return "Wrong input"
 
+
 note_commands = {
-    show_notes: ["show all"],
-    exit_notes: ["exit"],
-    add_note: ["add"],
-    delete_note: ["delete"],
-    change_note: ["edit"],
-    search: ["search"]
+    "add": [add_note, 'to add note'],
+    "delete": [delete_note, 'to delete note'],
+    "edit": [change_note, 'to edit note'],
+    "search": [search, 'to search note'],
+    "show all": [show_notes, 'to output all notes'],
+    "exit": [exit_notes, 'to exit']
 }
 
 
-def pars(txt_comm: str):
-    for key, key_words in note_commands.items():
-        for key_word in key_words:
-            if txt_comm == key_word:
-                return key
+def pars(txt_comm: str, command_dict):
+    command = None
+    for key in command_dict.keys():
+        if txt_comm.startswith(key):
+            command = key
+    return command
+
+
+def command_handler(user_input, note_commands):
+    if user_input in note_commands:
+        return note_commands[user_input][0]()
+    possible_command = difflib.get_close_matches(user_input, note_commands, cutoff=0.5)
+    if possible_command:
+        return f'Wrong command. Maybe you mean: {", ".join(possible_command)}'
+    else:
+        return f'Wrong command.'
+    
+
+def instruction(command_dict):
+    console = Console()
+    table = Table(show_header=True, header_style="bold magenta", width=60, show_lines=False)
+    table.add_column("Command", max_width= None, no_wrap=False)
+    table.add_column("Description", width= 20, no_wrap=False)
+
+    for func_name, func in command_dict.items():
+        table.add_row(str(func_name), str(func[1]))
+    
+    console.print(table)
 
 
 def notes_main():
-    print("***Hello i`m a notebook.***\nInput:\nadd - to add note\ndelete -to delete note\nedit - to edit note\nsearch - to search note\nshow all - to output all notes\nexit - to exit")
+    print("***Hello I`m a notebook.***\n")
+    instruction(note_commands)
     nb.load()
     while True:
         user_input_command = str(input("Input a command\n>>>"))
-        command = pars(user_input_command.lower())
-        if command is None:
-            print('Wrong command')
-        elif command == exit_notes:
+        command = pars(user_input_command.lower(), note_commands)
+        if user_input_command == 'exit':
             nb.save()
             print('Notebook closed')
             break
+        if user_input_command == 'show all':
+           show_notes()
         else:
-            result = command()
+            if command in note_commands:
+                result = command_handler(command, note_commands)
+            else:
+                result = command_handler(user_input_command, note_commands)
             nb.save()
-            if result:
-                print(result)
+            print(result)
 
 
 if __name__ == "__main__":
