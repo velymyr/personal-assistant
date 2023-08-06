@@ -1,5 +1,7 @@
 ## Personal Assistant Project
 
+*Read this in other languages: [English](README.en.md), [Ukrainian](README.md)
+
 The Personal Assistant (PA) project is a command-line interface program that comprises three main modules:
 
 1. **Address Book Module:** This module allows users to manage their contacts efficiently.
