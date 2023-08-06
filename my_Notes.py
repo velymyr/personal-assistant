@@ -97,7 +97,7 @@ class NoteBook(UserDict):
     def change_note(self):
         self.show_notes()
         
-        x = input("Choose the note you want to edit by number >>> ")
+        x = input("Choose the note you want to edit by number\n>>> ")
         
         try:
             x = int(x)
@@ -150,8 +150,8 @@ nb = NoteBook()
 
 def add_note():
 
-    user_input_note = input('Input your note >>>')
-    user_input_tags = input('Input tags for a note >>>')
+    user_input_note = input('Input your note\n>>>')
+    user_input_tags = input('Input tags for a note\n>>>')
     user_input_tags = user_input_tags.strip().split()
     tags = Tags()
     for user_tag in user_input_tags:
@@ -165,7 +165,7 @@ def add_note():
 def delete_note():
         nb.show_notes()
         
-        x = input("Choose the note you want to delete by number >>> ")
+        x = input("Choose the note you want to delete by number\n>>> ")
         
         try:
             x = int(x)
@@ -189,8 +189,8 @@ def show_notes():
     return nb.show_notes()
 
 def search():
-    user_choice = input("Enter '1' to search in note\nEnter '2' to search in tags >>>")
-    search_key = input("Enter a search keyword >>>")
+    user_choice = input("Enter '1' to search in note\nEnter '2' to search in tags\n>>>")
+    search_key = input("Enter a search keyword\n>>>")
     if user_choice == '1':
       return nb.search_note(search_key)
     elif user_choice == '2':
@@ -200,11 +200,11 @@ def search():
 
 note_commands = {
     show_notes: ["show all"],
-    exit_notes: [".", "bye", "good bye", "close", "exit"],
-    add_note: ["add","+"],
+    exit_notes: ["exit"],
+    add_note: ["add"],
     delete_note: ["delete"],
-    change_note: ["change", "edit"],
-    search: ["search", "find"]
+    change_note: ["edit"],
+    search: ["search"]
 }
 
 
@@ -216,10 +216,10 @@ def pars(txt_comm: str):
 
 
 def notes_main():
-    
+    print("***Hello i`m a notebook.***\nInput:\nadd - to add note\ndelete -to delete note\nedit - to edit note\nsearch - to search note\nshow all - to output all notes\nexit - to exit")
     nb.load()
     while True:
-        user_input_command = str(input("Input a command >>>"))
+        user_input_command = str(input("Input a command\n>>>"))
         command = pars(user_input_command.lower())
         if command is None:
             print('Wrong command')
