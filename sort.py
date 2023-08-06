@@ -120,8 +120,7 @@ def sorter_starter():
             return "\n"
 
         if path.name.lower() in ("close", "exit", "goodbye"):
-            print("Good bye!")
-            break
+            return "\nGoodbye!"
         elif not path.exists():
             print("_"*34)
             print("|{:<32}|".format("Folder with this path not exist"))
@@ -140,8 +139,7 @@ def sorter_starter():
         print("\nIf you like to continue type 'resume' or type 'close' to exit\n")
         user_answer = input(">>>")
         if user_answer.lower() in ("close", "exit", "good bye"):
-            print('\nGood bye!')
-            break
+            return '\nGood bye!'
         else:
             print("\nInput path to folder:\n")
             continue
