@@ -119,7 +119,7 @@ def sorter_starter():
         except IndexError:
             return "\n"
 
-        if path.name in ("close", "exit", "Goodbye"):
+        if path.name.lower() in ("close", "exit", "goodbye"):
             print("Good bye!")
             break
         elif not path.exists():
