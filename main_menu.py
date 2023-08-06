@@ -28,7 +28,6 @@ def menu():
         elif user_input == '3':
             print('\nFiles Sorter Started!')
             result = sorter_starter()
-
             print(result)
         elif user_input == '0':
             print('Goodbye!')
