@@ -92,28 +92,38 @@ def command_handler(user_input, command_dict):
 
 
 # like welcome message - to show all funcs for contact book etc.
+# def instruction(command_dict):
+#     result = []
+#     for func_name, func in command_dict.items():
+#         signature = inspect.signature(func[0])
+#         parameters = signature.parameters
+#         param_names = ' '.join(parameters.keys())
+
+#         if 'args' in parameters or 'kwargs' in parameters:
+#             result.append('{:<20s} {:<30s} {:s}'.format(
+#                 func_name, "", func[1]))
+#         else:
+#             result.append('{:<20s} {:<30s} {:s}'.format(
+#                 func_name, f"{param_names if param_names else ''}", func[1]))
+
+#     headers = '{:<20s} {:<30s} {:s}'.format(
+#         'Command', 'Parameters', 'Description')
+#     rows_command = headers + '\n' + '\n'.join(result)
+
+#     return rows_command.strip('\n')
 def instruction(command_dict):
     result = []
     for func_name, func in command_dict.items():
-        signature = inspect.signature(func[0])
-        parameters = signature.parameters
-        param_names = ' '.join(parameters.keys())
-
-        if 'args' in parameters or 'kwargs' in parameters:
-            result.append('{:<20s} {:<30s} {:s}'.format(
-                func_name, "", func[1]))
-        else:
-            result.append('{:<20s} {:<30s} {:s}'.format(
-                func_name, f"{param_names if param_names else ''}", func[1]))
-
-    headers = '{:<20s} {:<30s} {:s}'.format(
-        'Command', 'Parameters', 'Description')
+        result.append('{:<20s} {:s}'.format(
+            func_name, func[1]))
+    headers = '{:<20s} {:s}'.format(
+        'Command', 'Description')
     rows_command = headers + '\n' + '\n'.join(result)
-
     return rows_command.strip('\n')
 
-
 # example of parser user_input
+
+
 def parser_input(user_input: str, command_dict) -> tuple():
     command = None
     arguments = ''

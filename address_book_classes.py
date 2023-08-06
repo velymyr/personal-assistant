@@ -36,9 +36,8 @@ class Phone(Field):
             try:
                 for number in self.values.split(','):
                     if re.match('^\+\d{12}$', number) or number == '':
-                        result = '{}({}){}-{}-{}'.format(number[0:3], number[4:5],
-                                                         number[6:8], number[9:10], number[11:12])
-                        # result = f"{number[0]}{number[1]}{number[2]}{number[3]}({number[4]}{number[5]}){number[6]}{number[7]}{number[8]}-{number[9]}{number[10]}-{number[11]}{number[12]}"
+                        result = f"{number[0]}{number[1]}{number[2]}{number[3]}({number[4]}{number[5]}){number[6]}{number[7]}{number[8]}-{number[9]}{number[10]}-{number[11]}{number[12]}"
+                    # if re.match('^\+48\d{9}$', number) or re.match('^\\+38\d{10}$', number) or number == '':
                         self.value.append(result)
                     else:
                         raise ValueError
@@ -103,9 +102,7 @@ class Email(Field):
             else:
                 self.value = input("Email: ")
             try:
-                regex = re.compile(
-                    r'([A-Za-z0-9]+[.-_])*[A-Za-z0-9]+@[A-Za-z0-9-]+(\.[A-Z|a-z]{2,})+')
-                if (regex, self.value) or self.value == '':
+                if re.match ("^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$", self.value) or self.value == '':
                     break
                 else:
                     raise ValueError
