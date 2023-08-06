@@ -72,24 +72,23 @@ class BirthdayError(Exception):
 
 class Birthday(Field):
     def __init__(self, value=''):
-        while True:
-            if value:
-                self.value = value
-            else:
-                self.value = input("Birthday date(dd/mm/YYYY): ")
-            try:
-                if re.match('^\d{2}/\d{2}/\d{4}$', self.value):
-                    self.value = dt.strptime(self.value.strip(), "%d/%m/%Y")
-                    break
-                elif self.value == '':
-                    break
-                else:
-                    raise ValueError
-            except ValueError:
-                print('Incorrect date! Please provide correct date format.')
+        self.__value = None
+        self.value = value
 
-    def __getitem__(self):
-        return self.value
+    @property
+    def value(self):
+        return self.__value
+
+    @value.setter
+    def value(self, value):
+        try:
+            if dt.strptime(value, "%d/%m/%Y"):
+                self.__value = dt.strptime(value, "%d/%m/%Y")
+        except ValueError:
+            return value
+
+    def __str__(self):
+        return self.__value.strftime("%d/%m/%Y")
     # def __init__(self, value=''):
     #     self.__value = None
     #     if value:
@@ -288,7 +287,25 @@ class AddressBook(UserDict):
         return f"Contact {record} add success"
 
     def __str__(self):  # -> str:
-        return "\n".join(str(r) for r in self.data.values())
+        # return "\n".join(str(r) for r in self.data.values())
+        result = []
+        for account in self.data:
+            if account['birthday']:
+                birth = account['birthday'].strftime("%d/%m/%Y")
+            else:
+                birth = ''
+            if account['phones']:
+                new_value = []
+                for phone in account['phones']:
+                    print(phone)
+                    if phone:
+                        new_value.append(phone)
+                phone = ', '.join(new_value)
+            else:
+                phone = ''
+            result.append(
+                "_" * 50 + "\n" + f"Name: {account['name']} \nPhones: {phone} \nBirthday: {birth} \nEmail: {account['email']} \nStatus: {account['status']} \nNote: {account['note']}\n" + "_" * 50 + '\n')
+        return '\n'.join(result)
 
     def iterator(self, n=3):
         result = []

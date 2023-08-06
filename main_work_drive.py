@@ -248,7 +248,7 @@ def search_record(*args):
 def show_all_command(*args):
     if Record.__name__:
         return address_book
-    return
+    # return
 
 
 # Команди додати, змінити, видалити телефон, вихід, показати все, показати контакт
