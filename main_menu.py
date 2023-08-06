@@ -1,7 +1,7 @@
 """"This is main Menu"""
 
 from sort import sorter_starter
-from guesser import main as addressbook_starter
+from guesser import main as addressbook_starter #заглушка під адресбук
 from notebook import notes_starter #функція записника заглушка
 
 def menu():
