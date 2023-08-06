@@ -129,11 +129,6 @@ class NoteBook(UserDict):
         else:
             print("No matching entries found.")
 
-    # def search_tag(self, text):
-    #     for key, value in self.items():
-    #       tag_lst = ', '.join(str(v) for v in value)
-    #       if text in tag_lst:
-    #          print(key, tag_lst)
     def search_tag(self, text):
         found_entries = []
 
@@ -237,4 +232,7 @@ def notes_main():
             nb.save()
             if result:
                 print(result)
-notes_main()
+
+
+if __name__ == "__main__":
+    notes_main()
