@@ -1,10 +1,9 @@
 import difflib
 import inspect
 import functools
-from main_work_drive import load_address_book, save_address_book, parser, address_book, exit_command
-from address_book_classes import Record, Name, Phone, Birthday, Email, Status, Note, AddressBook
 
 
+# example
 def input_errors(func):
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
@@ -15,67 +14,27 @@ def input_errors(func):
                 error_message = "Too many arguments provided"
                 return error_message
             else:
-                error_message = str(e).split(' ')[1]
+                error_message = str(e).split(':')[1]
                 return f"Give me {error_message}"
     return wrapper
 
 
+# example
 @input_errors
-def add(*args):
-    name = Name(input("Name: ")).value.strip()
-    phones = Phone().value
-    birth = Birthday().value
-    email = Email().value.strip()
-    status = Status().value.strip()
-    note = Note(input("Note: ")).value
-    record = Record(name=name, phone=phones, birthday=birth,
-                    email=email, status=status, note=note)
-    return address_book.add_record(record)
+def add(name: str, phone: str):
+    ...
 
 
+# example
 @input_errors
 def change():
     ...
 
 
-@input_errors
-def delete_record(*args):
-    name = Name(args[0])
-    if name.value in address_book:
-        del address_book[name.value]
-        return f"Contact '{name}' has been deleted from the address book."
-    return f"No contact '{name}' found in the address book."
-
-
-@input_errors
-def remove_phone(*args):
-    name = Name(args[0])
-    phone = Phone(args[1])
-    rec: Record = address_book.get(str(name))
-    if rec:
-        return rec.remove_phone(phone)
-    return f"No contact {name} in address book"
-
-
-# @input_errors
-# def save(*args):
-#     if Record.__name__:
-#         return save_address_book
-
-
-@input_errors
-def show_all_command(*args):
-    if Record.__name__:
-        return address_book
-
-
+# example
 command_dict = {
     'add': [add, 'add contact'],
-    'show': [show_all_command, 'show'],
-    'save': [save_address_book, 'save address book'],
-    'remove phone': [remove_phone, 'remove phone from contacts'],
-    'change': [change, 'change existing contact'],
-    'delete contact': [delete_record, 'delete contact']
+    'change': [change, 'change existing contact']
 }
 
 
@@ -126,25 +85,13 @@ def parser_input(user_input: str, command_dict) -> tuple():
     return command, arguments
 
 
-def main():
-    # filename = "address_book.txt"
-    # try:
-    #     load_address_book(filename)
-    #     print("Address book loaded from file.")
-    # except FileNotFoundError:
-    print("New address book created.")
-    print("Please input command or start or menu")
+if __name__ == "__main__":
     while True:
         user_input = input('>>> ').lower()
-
-        # input 'menu' or 'start' to show all funcs
-
-        if user_input == 'menu' or user_input == 'start':
+        if user_input == 'menu' or user_input == 'start':     # input 'menu' or 'start' to show all funcs
             print("How can I help you?\n")
-
             print(instruction(command_dict))
-            print("Please make a choice")
-        elif user_input in ('good bye', "close", "exit", "0"):
+        elif user_input in ('good bye', "close", "exit"):
             # del_file_if_empty()
             print('Good bye!')
             break
@@ -155,7 +102,3 @@ def main():
             else:
                 result = command_handler(user_input, command_dict)
             print(result)
-
-
-if __name__ == "__main__":
-    main()
