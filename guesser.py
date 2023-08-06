@@ -90,7 +90,7 @@ def show_all_command(*args):
 command_dict = {
     'add': [add, 'add contact'],
     'show': [show_all_command, 'show'],
-    # 'save': [save_address_book, 'save address book'],
+    'save': [save_address_book, 'save address book'],
     'remove phone': [remove_phone, 'remove phone from contacts'],
     'change': [change, 'change existing contact'],
     'delete contact': [delete_record, 'delete contact']
@@ -139,18 +139,18 @@ def parser_input(user_input: str, command_dict) -> tuple():
     for key in command_dict.keys():
         if user_input.startswith(key):
             command = key
-            arguments = user_input.replace(key, '').strip().split()
+            arguments = user_input.replace(key, '/').strip().split()
             break
     return command, arguments
 
 
 def main():
-    filename = "address_book.txt"
+    # filename = "address_book.txt"
     # try:
     #     load_address_book(filename)
     #     print("Address book loaded from file.")
     # except FileNotFoundError:
-    #     print("New address book created.")
+    print("New address book created.")
     print("Please input command or start or menu")
     while True:
         user_input = input('>>> ').lower()
