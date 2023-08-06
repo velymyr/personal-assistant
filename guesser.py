@@ -2,7 +2,7 @@ import difflib
 import inspect
 import functools
 from main_work_drive import load_address_book, save_address_book, parser, address_book, exit_command
-from address_book_classes import Record, Name, Phone, Birthday, Email, Address, AddressBook
+from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
 
 
 def input_errors(func):
@@ -27,8 +27,9 @@ def add(*args):
     birth = Birthday().value
     email = Email().value.strip()
     address = Address(input("Address: ")).value
+    note = Note(input("Note: ")).value
     record = Record(name=name, phone=phones, birthday=birth,
-                    email=email, address=address)
+                    email=email, address=address, note=note)
     return address_book.add_record(record)
 
 

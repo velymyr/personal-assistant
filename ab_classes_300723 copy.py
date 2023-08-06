@@ -1,7 +1,6 @@
 from collections import UserDict
 from bd import main_bd
-import re
-from datetime import datetime as dt
+from datetime import datetime
 import csv
 import json
 import pickle
@@ -20,35 +19,13 @@ class Field:
 
 
 class Name(Field):
-    def __init__(self, value):
-        self.value = value
+    ...
 
 
 class Phone(Field):
-    def __init__(self, value=''):
-        while True:
-            self.value = []
-            if value:
-                self.values = value
-            else:
-                self.values = input(
-                    "Phones(+12digits) (Введіть номер телефона + і дванадцять цифр): ")
-            try:
-                for number in self.values.split(','):
-                    if re.match('^\+\d{12}$', number) or number == '':
-                        result = f"{number[0]}{number[1]}{number[2]}{number[3]}({number[4]}{number[5]}){number[6]}{number[7]}{number[8]}-{number[9]}{number[10]}-{number[11]}{number[12]}"
-                    # if re.match('^\+48\d{9}$', number) or re.match('^\\+38\d{10}$', number) or number == '':
-                        self.value.append(result)
-                    else:
-                        raise ValueError
-            except ValueError:
-                print(
-                    'Incorrect phone number format! Please provide correct phone number format.')
-            else:
-                break
-
-    def __getitem__(self):
-        return self.value
+    def __init__(self, value):
+        self.__value = None
+        self.value = value
 
     @property
     def value(self):
@@ -71,43 +48,9 @@ class BirthdayError(Exception):
 
 
 class Birthday(Field):
-    def __init__(self, value=''):
-        while True:
-            if value:
-                self.value = value
-            else:
-                self.value = input("Birthday date(dd/mm/YYYY): ")
-            try:
-                if re.match('^\d{2}/\d{2}/\d{4}$', self.value):
-                    self.value = dt.strptime(self.value.strip(), "%d/%m/%Y")
-                    break
-                elif self.value == '':
-                    break
-                else:
-                    raise ValueError
-            except ValueError:
-                print('Incorrect date! Please provide correct date format.')
-
-    def __getitem__(self):
-        return self.value
-    #     return self.__value.strftime("%d/%m/%Y")
-
-
-class Email(Field):
-    def __init__(self, value=''):
-        while True:
-
-            if value:
-                self.value = value
-            else:
-                self.value = input("Email: ")
-            try:
-                if re.match ("^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$", self.value) or self.value == '':
-                    break
-                else:
-                    raise ValueError
-            except ValueError:
-                print('Incorrect email! Please provide correct email.')
+    def __init__(self, value):
+        self.__value = None
+        self.value = value
 
     @property
     def value(self):
@@ -116,41 +59,25 @@ class Email(Field):
     @value.setter
     def value(self, value):
         try:
-            self.__value = value
-
+            if datetime.strptime(value, "%d/%m/%Y"):
+                self.__value = datetime.strptime(value, "%d/%m/%Y")
         except ValueError:
-            return
+            return value
 
     def __str__(self):
-        return self.__value
+        return self.__value.strftime("%d/%m/%Y")
 
 
-class Address(Field):
-    def __init__(self, value):
-        self.__value = None
-        self.value = value
-
-
-class Note(Field):
-    def __init__(self, value):
-        self.__value = None
-        self.value = value
+class Email(Field):
+    ...
 
 
 class Record:
 
-    def __init__(self, name: Name, phone: Phone = None, birthday: Birthday = None, email: Email = None, address: Address = None, note: Note = None) -> None:
+    def __init__(self, name: Name, phone: Phone = None, birthday: Birthday = None) -> None:
         self.name = name
         self.phones = []
         self.birthday = birthday
-        self.emailes = []
-        self.address = address
-        self.note = note
-        if email:
-            if isinstance(email, list):
-                self.emailes.extend(email)
-            else:
-                self.emailes.append(email)
         if phone:
             if isinstance(phone, list):
                 self.phones.extend(phone)
@@ -164,16 +91,10 @@ class Record:
         return f"{self.birthday} allready present in birthday data of contact {self.name}"
 
     def add_phone(self, phone: Phone):
-        if phone.value.strip() not in [p.value.strip() for p in self.phones]:
+        if phone.value not in [p.value for p in self.phones]:
             self.phones.append(phone)
             return f"phone {phone} add to contact {self.name}"
         return f"{phone} present in phones of contact {self.name}"
-
-    def add_email(self, email: Email):
-        if email.value in [e.value for e in self.emails]:
-            return f"{email} present in emails of contact {self.name}"
-        self.emails.append(email)
-        return f"email {email} add to contact {self.name}"
 
     def change_phone(self, old_phone, new_phone):
         for idx, p in enumerate(self.phones):
@@ -191,13 +112,12 @@ class Record:
         return result
 
     def __str__(self) -> str:
-        return f"{self.name} : {', '.join(p for p in self.phones)}  {(str(self.birthday))} {', '.join(p for p in self.emailes)} {(str(self.address))} {(str(self.note))} "
+        return f"{self.name} : {', '.join(str(p) for p in self.phones)}  {(str(self.birthday))}"
+        # return "{:^20} {:^20} {:^20}".format(self.name, ', '.join(str(p) for p in self.phones), str(self.birthday))
 
     def remove_phone(self, phone):
         for idx, p in enumerate(self.phones):
-            print(len(p.value))
-            print(len(phone.value))
-            if phone.value.strip() == p.value.strip():
+            if phone.value == p.value:
                 old_phone = (self.phones[idx])
                 self.phones.remove(self.phones[idx])
                 return f"The phone {old_phone} is deleted"
@@ -211,7 +131,7 @@ class AddressBook(UserDict):
         # add to file
         return f"Contact {record} add success"
 
-    def __str__(self):  # -> str:
+    def __str__(self) -> str:
         return "\n".join(str(r) for r in self.data.values())
 
     def iterator(self, n=3):
@@ -237,9 +157,7 @@ class AddressBook(UserDict):
                 phones = [phone.value for phone in rec.phones]
                 birthday = rec.birthday.value.strftime(
                     "%d/%m/%Y") if rec.birthday else ""
-                emailes = [email.value for email in rec.emailes]
-                writer.writerow(
-                    [name, ",".join(phones), birthday, ",".join(emailes)])
+                writer.writerow([name, ",".join(phones), birthday])
             # writer.writerow(self.data.values())
 
     def serialize_to_pickle(self, filename):

@@ -72,62 +72,24 @@ class BirthdayError(Exception):
 
 class Birthday(Field):
     def __init__(self, value=''):
-        self.__value = None
-        self.value = value
+        while True:
+            if value:
+                self.value = value
+            else:
+                self.value = input("Birthday date(dd/mm/YYYY): ")
+            try:
+                if re.match('^\d{2}/\d{2}/\d{4}$', self.value):
+                    self.value = dt.strptime(self.value.strip(), "%d/%m/%Y")
+                    break
+                elif self.value == '':
+                    break
+                else:
+                    raise ValueError
+            except ValueError:
+                print('Incorrect date! Please provide correct date format.')
 
-    @property
-    def value(self):
-        return self.__value
-
-    @value.setter
-    def value(self, value):
-        try:
-            if dt.strptime(value, "%d/%m/%Y"):
-                self.__value = dt.strptime(value, "%d/%m/%Y")
-        except ValueError:
-            return value
-
-    def __str__(self):
-        return self.__value.strftime("%d/%m/%Y")
-    # def __init__(self, value=''):
-    #     self.__value = None
-    #     if value:
-    #         self.value = value
-    #     while True:
-    #         if value:
-    #             self.value = value
-    #             break
-    #         else:
-    #             self.value = input("Birthday date(dd/mm/YYYY): ")
-    #         try:
-    #             if re.fullmatch('^\d{2}/\d{2}/\d{4}$', self.value):
-    #                 # pattern_bd = "(\d{2})/(\d{2})/(\d{4})"
-    #                 # if re.match(pattern_bd, self.value):
-    #                 self.value = dt.strptime(self.value.strip(), "%d/%m/%Y")
-    #                 break
-    #             elif self.value == '':
-    #                 break
-    #             else:
-    #                 raise ValueError
-    #         except ValueError:
-    #             print('Incorrect date! Please provide correct date format.')
-
-    # def __getitem__(self):
-    #     return self.value
-
-    # @property
-    # def value(self):
-    #     return self.__value
-
-    # @value.setter
-    # def value(self, value):
-    #     try:
-    #         if dt.strptime(value, "%d/%m/%Y"):
-    #             self.__value = dt.strptime(value, "%d/%m/%Y")
-    #     except ValueError:
-    #         return value
-
-    # def __str__(self):
+    def __getitem__(self):
+        return self.value
     #     return self.__value.strftime("%d/%m/%Y")
 
 
@@ -140,20 +102,12 @@ class Email(Field):
             else:
                 self.value = input("Email: ")
             try:
-                # if re.match('^(\w|\.|\_|\-)+[@](\w|\_|\-|\.)+[.]\w{2,3}$', self.value) or self.value == '':
                 if re.match ("^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$", self.value) or self.value == '':
                     break
                 else:
                     raise ValueError
             except ValueError:
                 print('Incorrect email! Please provide correct email.')
-
-    # def __getitem__(self):
-    #     return self.value
-# class Email(Field):
-#     def __init__(self, value):
-#         self.__value = None
-#         self.value = value
 
     @property
     def value(self):
@@ -171,26 +125,26 @@ class Email(Field):
         return self.__value
 
 
-class Status(Field):
+# class Status(Field):
 
-    def __init__(self, value=''):
-        while True:
-            self.status_types = ['', 'family', 'friend', 'work']
-            if value:
-                self.value = value
-            else:
-                self.value = input(
-                    "Type of relationship (family, friend, work): ")
-            try:
-                if self.value in self.status_types:
-                    break
-                else:
-                    raise ValueError
-            except ValueError:
-                print('There is no such status!')
+#     def __init__(self, value=''):
+#         while True:
+#             self.status_types = ['', 'family', 'friend', 'work']
+#             if value:
+#                 self.value = value
+#             else:
+#                 self.value = input(
+#                     "Type of relationship (family, friend, work): ")
+#             try:
+#                 if self.value in self.status_types:
+#                     break
+#                 else:
+#                     raise ValueError
+#             except ValueError:
+#                 print('There is no such status!')
 
-    def __getitem__(self):
-        return self.value
+#     def __getitem__(self):
+#         return self.value
 
 
 # class Note(Field):
@@ -205,7 +159,7 @@ class Status(Field):
 #         self.value = value
 
 
-class Note(Field):
+class Address(Field):
     def __init__(self, value):
         self.__value = None
         self.value = value
@@ -213,13 +167,12 @@ class Note(Field):
 
 class Record:
 
-    def __init__(self, name: Name, phone: Phone = None, birthday: Birthday = None, email: Email = None, status: Status = None, note: Note = None) -> None:
+    def __init__(self, name: Name, phone: Phone = None, birthday: Birthday = None, email: Email = None, address: Address = None) -> None:
         self.name = name
         self.phones = []
         self.birthday = birthday
         self.emailes = []
-        self.status = status
-        self.note = note
+        self.address = address
         if email:
             if isinstance(email, list):
                 self.emailes.extend(email)
@@ -265,8 +218,7 @@ class Record:
         return result
 
     def __str__(self) -> str:
-        return f"{self.name} : {', '.join(p for p in self.phones)}  {(str(self.birthday))} {', '.join(p for p in self.emailes)} "
-        # return "{:^20} {:^20} {:^20}".format(self.name, ', '.join(str(p) for p in self.phones), str(self.birthday))
+        return f"{self.name} : {', '.join(p for p in self.phones)}  {(str(self.birthday))} {', '.join(p for p in self.emailes)} {(str(self.address))} "
 
     def remove_phone(self, phone):
         for idx, p in enumerate(self.phones):
@@ -287,25 +239,7 @@ class AddressBook(UserDict):
         return f"Contact {record} add success"
 
     def __str__(self):  # -> str:
-        # return "\n".join(str(r) for r in self.data.values())
-        result = []
-        for account in self.data:
-            if account['birthday']:
-                birth = account['birthday'].strftime("%d/%m/%Y")
-            else:
-                birth = ''
-            if account['phones']:
-                new_value = []
-                for phone in account['phones']:
-                    print(phone)
-                    if phone:
-                        new_value.append(phone)
-                phone = ', '.join(new_value)
-            else:
-                phone = ''
-            result.append(
-                "_" * 50 + "\n" + f"Name: {account['name']} \nPhones: {phone} \nBirthday: {birth} \nEmail: {account['email']} \nStatus: {account['status']} \nNote: {account['note']}\n" + "_" * 50 + '\n')
-        return '\n'.join(result)
+        return "\n".join(str(r) for r in self.data.values())
 
     def iterator(self, n=3):
         result = []
