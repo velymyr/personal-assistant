@@ -36,7 +36,9 @@ class Phone(Field):
             try:
                 for number in self.values.split(','):
                     if re.match('^\+\d{12}$', number) or number == '':
-                        result = f"{number[0]}{number[1]}{number[2]}{number[3]}({number[4]}{number[5]}){number[6]}{number[7]}{number[8]}-{number[9]}{number[10]}-{number[11]}{number[12]}"
+                        result = '{}({}){}-{}-{}'.format(number[0:3], number[4:5],
+                                                         number[6:8], number[9:10], number[11:12])
+                        # result = f"{number[0]}{number[1]}{number[2]}{number[3]}({number[4]}{number[5]}){number[6]}{number[7]}{number[8]}-{number[9]}{number[10]}-{number[11]}{number[12]}"
                         self.value.append(result)
                     else:
                         raise ValueError
