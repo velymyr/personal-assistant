@@ -89,9 +89,8 @@ class Email(Field):
         return self.__value
 
 
-class Status(Field):
+class Address(Field):
     ...
-
 
 class Note(Field):
     ...
