@@ -169,7 +169,7 @@ def addressbook_starter():
     
     # print(address_book.congratulate())
     while True:
-        user_input = input('>>> ').lower()
+        user_input = input('Input a command\n>>>').lower()
         # input 'menu' to show all funcs
         if user_input == 'menu':
             instruction(command_dict)
