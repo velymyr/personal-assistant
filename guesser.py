@@ -2,8 +2,9 @@ import difflib
 import inspect
 import functools
 from main_work_drive import address_book, get_days_to_birthday
-from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
-filename= 'address_book'
+from ab_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
+filename = 'address_book'
+
 
 def input_errors(func):
     @functools.wraps(func)
@@ -61,7 +62,7 @@ def delete_record(*args):
 def remove_phone(*args):
     name = Name(args[0])
     phone = Phone(args[1])
-    #print(phone.value)
+    # print(phone.value)
     rec: Record = address_book.get(str(name))
     if rec:
         return rec.remove_phone(phone.values)
@@ -84,7 +85,7 @@ command_dict = {
     'add': [add, 'add contact'],
     'show': [show_all_address_book, 'show'],
     'save': [address_book.save, 'save address book'],
-    'bd' : [get_days_to_birthday, 'bd'],
+    'bd': [get_days_to_birthday, 'bd'],
     'remove': [remove_phone, 'remove phone from contacts'],
     'change': [change, 'change existing contact'],
     'delete': [delete_record, 'delete contact']
@@ -116,7 +117,7 @@ def instruction(command_dict):
 # example of parser user_input
 
 
-def parser_input(user_input: str, command_dict): #-> tuple():
+def parser_input(user_input: str, command_dict):  # -> tuple():
     command = None
     arguments = ''
 
@@ -136,7 +137,7 @@ def main():
     except FileNotFoundError:
         print("New address book created.")
     print("Please input command or start or menu")
-    #print(address_book.congratulate())
+    # print(address_book.congratulate())
     while True:
         user_input = input('>>> ').lower()
 
