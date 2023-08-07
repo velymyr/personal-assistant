@@ -206,13 +206,18 @@ def search():
        return "Wrong input"
 
 
+def menu():
+    pass
+
+
 note_commands = {
     "add": [add_note, 'to add note'],
     "delete": [delete_note, 'to delete note'],
     "edit": [change_note, 'to edit note'],
     "search": [search, 'to search note'],
     "show all": [show_notes, 'to output all notes'],
-    "exit": [exit_notes, 'to exit']
+    'menu': [menu, 'to see list of commands'],
+    "0 or exit": [exit_notes, 'to exit']
 }
 
 
@@ -253,11 +258,13 @@ def notes_main():
     while True:
         user_input_command = str(input("Input a command\n>>>"))
         command = pars(user_input_command.lower(), note_commands)
-        if user_input_command == 'exit':
+        if user_input_command == 'menu':
+            instruction(note_commands)
+        elif user_input_command in ("exit", "0"):
             nb.save()
             print('Notebook closed')
             break
-        if user_input_command == 'show all':
+        elif user_input_command == 'show all':
            show_notes()
         else:
             if command in note_commands:
