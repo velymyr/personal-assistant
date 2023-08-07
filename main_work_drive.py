@@ -1,11 +1,11 @@
 from datetime import datetime
-from address_book_classes import AddressBook, Name, Phone, Record, Birthday, Email, Address
+from address_book_classes import AddressBook, Name, Phone, Record, Birthday, Email, Address, Note
 import re
 import pickle
 
 
 address_book = AddressBook()
-filename = 'address_book.txt'
+filename = 'address_book'
 
 
 def input_error(func):
@@ -163,26 +163,28 @@ def hello(*args):
     return "How can I help you?"
 
 
-def load_address_book(filename):
-    if filename == 'address_book.txt':
-        with open(filename, "r") as file:
-            for line in file:
-                data = line.strip().split(" : ")
-                name = Name(data[0])
-                phones = [Phone(phone) for phone in data[1].split(",")]
-                birthday = Birthday(data[2]) if data[2] else None
-                emailes = Email(data[3]) if data[3] else None
-                record = Record(name=name, phone=phones,
-                                birthday=birthday, email=emailes)
-                address_book.add_record(record)
-        return address_book
+# def load_address_book(filename):
+#     if filename == 'address_book.txt':
+#         with open(filename, "r") as file:
+#             for line in file:
+#                 data = line.strip().split(" : ")
+#                 name = Name(data[0])
+#                 phones = [Phone(phone) for phone in data[1].split(",")]
+#                 birthday = Birthday(data[2]) if data[2] else None
+#                 emailes = Email(data[3]) if data[3] else None
+#                 address = Address(data[4]) if data[4] else None
+#                 note = Note(data[5]) if data[5] else None
+#                 record = Record(name=name, phone=phones,
+#                                 birthday=birthday, email=emailes, address=address, note=note)
+#                 address_book.add_record(record)
+#         return address_book
 
-    if filename == 'address_book.txt':
-        with open(filename, "rb") as fh:
-            data = pickle.load(fh)
-            for keys, values in data.items():
-                address_book.add_record(values)
-        return address_book
+    # if filename == 'address_book.txt':
+    #     with open(filename, "rb") as fh:
+    #         data = pickle.load(fh)
+    #         for keys, values in data.items():
+    #             address_book.add_record(values)
+    #     return address_book
 
 
 # Невідома команда пуста команда
@@ -203,42 +205,46 @@ def remove_phone(*args):
     return f"No contact {name} in address book"
 
 
-def save_address_book(address_book, filename=filename):
-    with open(filename, "w") as file:
-        for record in address_book.data.values():
-            name = record.name.value
-            phones = [phone.value for phone in record.phones]
-            emailes = [email.value for email in record.emailes]
-            birthday = record.birthday.value.strftime(
-                "%d/%m/%Y") if record.birthday else ""
-            file.write(
-                f"{name} : {','.join(phones)} : {birthday} : {','.join(emailes)}\n")
+# def save_address_book(address_book, filename=filename):
+#     with open(filename, "w") as file:
+#         for record in address_book:
+#             name = record.name.value
+#             phones = [phone.value for phone in record.phones]
+#             birthday = record.birthday.value.strftime(
+#                 "%d/%m/%Y") if record.birthday else ""
+#             emailes = [email.value for email in record.emailes]
+#             address = address
+#             note = note
+#             file.write(
+#                 f"{name} : {','.join(phones)} : {birthday} : {','.join(emailes)} : {address} : {note} \n")
 
-    return 'OK'
+#     return 'OK'
 
 
 def search_record(*args):
     elem = args[0]
-    save_address_book(address_book, 'search.txt')
-    fh = open('result.txt', "w")
-    with open("search.txt", "r") as file:
+    address_book.save('search')
+    fh = open('result', "w")
+    with open("search", "r") as file:
         for line in file:
             if not line.find(elem) == -1:
                 fh.write(line)
             else:
                 continue
     fh.close()
-    with open('result.txt', "r") as fh:
+    with open('result', "r") as fh:
         address_book_search = AddressBook()
-        for line in fh:
-            data = line.strip().split(" : ")
-            name = Name(data[0])
-            phones = [Phone(phone) for phone in data[1].split(",")]
-            birthday = Birthday(data[2]) if data[2] else None
-            emailes = Email(data[3]) if data[3] else None
-            record = Record(name=name, phone=phones,
-                            birthday=birthday, email=emailes)
-            address_book_search.add_record(record)
+        #with open( + '.bin', 'rb') as file:
+        address_book_search.data = pickle.load(file)
+        # for line in fh:
+        #     data = line.strip().split(" : ")
+        #     name = Name(data[0])
+        #     phones = [Phone(phone) for phone in data[1].split(",")]
+        #     birthday = Birthday(data[2]) if data[2] else None
+        #     emailes = Email(data[3]) if data[3] else None
+        #     record = Record(name=name, phone=phones,
+        #                     birthday=birthday, email=emailes)
+        #     address_book_search.add_record(record)
     return address_book_search
 
 # показати все
@@ -276,44 +282,44 @@ def parser(text: str):
     return no_command, []
 
 
-def main():
-    filename = "address_book.txt"
-    try:
-        load_address_book(filename)
-        print("Address book loaded from file.")
-    except FileNotFoundError:
-        print("New address book created.")
+# def main():
+#     filename = "address_book.txt"
+#     try:
+#         load_address_book(filename)
+#         print("Address book loaded from file.")
+#     except FileNotFoundError:
+#         print("New address book created.")
 
-    while True:
-        user_input = input(">>>")
-        if user_input == "save":
-            save_address_book(address_book, 'address_book_.txt')
-            print("Address book saved to file.")
-        elif user_input == "save_csv":
-            address_book.serialize_to_csv("address_book.csv")
-            print("Address book saved to CSV file.")
-        elif user_input == "save_json":
-            address_book.serialize_to_json("address_book.json")
-            print("Address book saved to JSON file.")
-        elif user_input == "save_pickle":
-            address_book.serialize_to_pickle("address_book.bin")
-            print("Address book saved to bin file.")
-        elif user_input.startswith("pages"):
-            rec_per_page = None
-            try:
-                rec_per_page = int(user_input[len("pages"):].strip())
-            except ValueError:
-                rec_per_page = 3
-            for rec in address_book.iterator(rec_per_page):
-                print(rec)
-                input("For next page press any key")
-        else:
-            cmd, data = parser(user_input)
-            result = cmd(*data)
-            print(result)
-            if cmd == exit_command:
-                break
+#     while True:
+#         user_input = input(">>>")
+#         if user_input == "save":
+#             save_address_book(address_book, 'address_book_.txt')
+#             print("Address book saved to file.")
+#         elif user_input == "save_csv":
+#             address_book.serialize_to_csv("address_book.csv")
+#             print("Address book saved to CSV file.")
+#         elif user_input == "save_json":
+#             address_book.serialize_to_json("address_book.json")
+#             print("Address book saved to JSON file.")
+#         elif user_input == "save_pickle":
+#             address_book.serialize_to_pickle("address_book.bin")
+#             print("Address book saved to bin file.")
+#         elif user_input.startswith("pages"):
+#             rec_per_page = None
+#             try:
+#                 rec_per_page = int(user_input[len("pages"):].strip())
+#             except ValueError:
+#                 rec_per_page = 3
+#             for rec in address_book.iterator(rec_per_page):
+#                 print(rec)
+#                 input("For next page press any key")
+#         else:
+#             cmd, data = parser(user_input)
+#             result = cmd(*data)
+#             print(result)
+#             if cmd == exit_command:
+#                 break
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()

@@ -2,10 +2,11 @@ from collections import UserDict
 from bd import main_bd
 import re
 from datetime import datetime as dt
-import csv
-import json
+# import csv
+# import json
 import pickle
-
+import os
+# filename= 'address_book_1.txt'
 
 class Field:
 
@@ -20,11 +21,13 @@ class Field:
 
 
 class Name(Field):
+
     def __init__(self, value):
         self.value = value
 
 
 class Phone(Field):
+
     def __init__(self, value=''):
         while True:
             self.value = []
@@ -56,7 +59,6 @@ class Phone(Field):
     def value(self, value):
         try:
             self.__value = value
-
         except ValueError:
             return
 
@@ -69,6 +71,7 @@ class BirthdayError(Exception):
 
 
 class Birthday(Field):
+
     def __init__(self, value=''):
         while True:
             if value:
@@ -89,13 +92,11 @@ class Birthday(Field):
 
     def __getitem__(self):
         return self.value.date()
-        #return self.__value.strftime("%d/%m/%Y")
 
 
 class Email(Field):
     def __init__(self, value=''):
         while True:
-
             if value:
                 self.value = value
             else:
@@ -116,7 +117,6 @@ class Email(Field):
     def value(self, value):
         try:
             self.__value = value
-
         except ValueError:
             return
 
@@ -193,10 +193,8 @@ class Record:
         return f"{self.name} : {', '.join(p for p in self.phones)}  {(str(self.birthday))} {', '.join(p for p in self.emailes)} {(str(self.address))} {(str(self.note))} "
 
     def remove_phone(self, phone):
-        #print(f'phone={phone)}')
         for idx, p in enumerate(self.phones):
             print(f'p= {self.phones[idx]}')
-            #print(f'phone={phone}')
             if phone == p:
                 old_phone = (self.phones[idx])
                 self.phones.remove(self.phones[idx])
@@ -208,7 +206,6 @@ class AddressBook(UserDict):
 
     def add_record(self, record: Record):
         self.data[str(record.name)] = record
-        # add to file
         return f"Contact {record} add success"
 
     def __str__(self):  # -> str:
@@ -240,7 +237,6 @@ class AddressBook(UserDict):
                 emailes = [email.value for email in rec.emailes]
                 writer.writerow(
                     [name, ",".join(phones), birthday, ",".join(emailes)])
-            # writer.writerow(self.data.values())
 
     def serialize_to_pickle(self, filename):
         with open(filename, "wb") as fh:
@@ -255,6 +251,17 @@ class AddressBook(UserDict):
                 "birthday": record.birthday.value.strftime("%d/%m/%Y") if record.birthday else "",
             }
             data_list.append(data)
-
         with open(filename, "w") as file:
             json.dump(data_list, file)
+
+    def save(self, file_name):
+        with open(file_name + '.bin', 'wb') as file:
+            pickle.dump(self.data, file)
+        return 'OK'
+
+    def load(self, file_name):
+        emptyness = os.stat(file_name + '.bin')
+        with open(file_name + '.bin', 'rb') as file:
+            self.data = pickle.load(file)
+        return self.data
+

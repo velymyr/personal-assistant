@@ -1,9 +1,9 @@
 import difflib
 import inspect
 import functools
-from main_work_drive import load_address_book, save_address_book, parser, address_book, exit_command
+from main_work_drive import address_book
 from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
-
+filename= 'address_book'
 
 def input_errors(func):
     @functools.wraps(func)
@@ -38,6 +38,16 @@ def change():
     ...
 
 
+# @input_errors
+# def save(*args):
+#     #filename= filename
+#     return address_book.save_address_book()
+
+# @input_errors
+# def load(*args):
+#     return address_book.load_address_book()
+
+
 @input_errors
 def delete_record(*args):
     name = Name(args[0])
@@ -65,15 +75,16 @@ def remove_phone(*args):
 
 
 @input_errors
-def show_all_command(*args):
+def show_all_address_book(*args):
     if Record.__name__:
         return address_book
 
 
 command_dict = {
     'add': [add, 'add contact'],
-    'show': [show_all_command, 'show'],
-    'save': [save_address_book, 'save address book'],
+    'show': [show_all_address_book, 'show'],
+    'save': [address_book.save, 'save address book'],
+    
     'remove': [remove_phone, 'remove phone from contacts'],
     'change': [change, 'change existing contact'],
     'delete': [delete_record, 'delete contact']
@@ -125,7 +136,7 @@ def instruction(command_dict):
 # example of parser user_input
 
 
-def parser_input(user_input: str, command_dict) -> tuple():
+def parser_input(user_input: str, command_dict): #-> tuple():
     command = None
     arguments = ''
 
@@ -138,12 +149,12 @@ def parser_input(user_input: str, command_dict) -> tuple():
 
 
 def main():
-    # filename = "address_book.txt"
-    # try:
-    #     load_address_book(filename)
-    #     print("Address book loaded from file.")
-    # except FileNotFoundError:
-    print("New address book created.")
+    filename = "add_book"
+    try:
+        address_book.load(filename)
+        print("Address book loaded from file.")
+    except FileNotFoundError:
+        print("New address book created.")
     print("Please input command or start or menu")
     while True:
         user_input = input('>>> ').lower()
