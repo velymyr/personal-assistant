@@ -92,7 +92,6 @@ command_dict = {
 }
 
 
-# use difflib.get_close_matches for guess the command. Usually cutoff=0.6, but maybe better to set 0.4-0.5 to wider guessing
 def command_handler(user_input, command_dict):
     if user_input in command_dict:
         return command_dict[user_input][0]
@@ -101,7 +100,7 @@ def command_handler(user_input, command_dict):
     if possible_command:
         return f'An unknown command. Maybe you mean: {", ".join(possible_command)}'
     else:
-        return f'An unknown command.'
+        return 'An unknown command.'
 
 
 def instruction(command_dict):

@@ -5,7 +5,6 @@ from datetime import datetime as dt
 # import csv
 # import json
 import pickle
-import os
 # filename= 'address_book_1.txt'
 
 
@@ -45,7 +44,7 @@ class Phone(Field):
                         raise ValueError
             except ValueError:
                 print(
-                    'Incorrect phone number format! Please provide correct phone number format.')
+                    'Incorrect phone number format! Please provide correct phone number')
             else:
                 break
 
@@ -103,7 +102,10 @@ class Email(Field):
             else:
                 self.value = input("Email: ")
             try:
-                if re.match ("^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$", self.value) or self.value == '':
+                if re.match ("^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}\
+                ~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|\
+                com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|\
+                travel|[a-z][a-z])$", self.value) or self.value == '':
                     break
                 else:
                     raise ValueError
@@ -139,7 +141,9 @@ class Note(Field):
 
 class Record:
 
-    def __init__(self, name: Name, phone: Phone = None, birthday: Birthday = None, email: Email = None, address: Address = None, note: Note = None) -> None:
+    def __init__(self, name: Name, phone: Phone = None,
+                 birthday: Birthday = None, email: Email = None,
+                 address: Address = None, note: Note = None) -> None:
         self.name = name
         self.phones = []
         self.birthday = birthday

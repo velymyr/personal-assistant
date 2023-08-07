@@ -12,23 +12,18 @@ def input_error(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except NameError as e:
-            print(
-                f"Give me a name and phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
-        except IndexError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
-        except TypeError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
-        except UnboundLocalError as e:
+        except NameError:
+            print("Give me a name, phone +12chars or birthday dd/mm/YYYY")
+        except IndexError:
+            print("Give me a name, phone +12chars or birthday dd/mm/YYYY")
+        except TypeError:
+            print("Give me a name, phone +12chars or birthday dd/mm/YYYY")
+        except UnboundLocalError:
             print("Contact exists")
-        except ValueError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
-        except AttributeError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
+        except ValueError:
+            print("Give me a name, phone +12chars or birthday dd/mm/YYYY")
+        except AttributeError:
+            print("Give me a name, phone +12chars or birthday dd/mm/YYYY")
     return wrapper
 
 
@@ -97,7 +92,9 @@ def check_bd(args):
 
 
 def check_email(args):
-    pattern = "^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$"
+    pattern = "^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:\
+    [a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|\
+    mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$"
     if re.match (pattern, args):
         email = Email(args)
     print(email)
