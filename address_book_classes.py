@@ -2,6 +2,9 @@ from collections import UserDict
 from bd import main_bd
 import re
 from datetime import datetime as dt
+from datetime import date, timedelta
+from rich.console import Console
+from rich.table import Table
 # import csv
 # import json
 import pickle
@@ -289,3 +292,56 @@ class AddressBook(UserDict):
             if len(value):
                 result.append(f"{key}: {' '.join(value)}")
         return '_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
+    
+
+
+
+
+
+
+
+
+    
+    def who_has_birthday_after_n_days(self, n_days):      
+        current_date = dt.now().date()
+        future_birthday = current_date + timedelta(days=n_days)
+        contacts_with_birthday = []
+
+        for record in self.data.values():
+            if record.birthday is not None:
+                remaining_days_in_year = (date(current_date.year, 12, 31) - future_birthday).days
+                if remaining_days_in_year > n_days:
+                    birthday_this_year = record.birthday.replace(year=current_date.year)
+                    if future_birthday == birthday_this_year:
+                        contacts_with_birthday.append(record.name)
+                else: 
+                    birthday_next_year = record.birthday.replace(year=(current_date.year + 1))
+                    if future_birthday == birthday_next_year:
+                        contacts_with_birthday.append(record.name)
+
+        if contacts_with_birthday:
+            return ', '.join(name for name in contacts_with_birthday)
+        else:
+            return f"Nobody has birthday after {n_days} days"
+
+    def show_all_address_book(self):
+            console = Console()
+            table = Table(show_header=True, header_style="bold magenta", width=120,show_lines=True)
+            table.add_column("Name", width= 40, no_wrap=False)
+            table.add_column("Phones", width= 40, no_wrap=False)
+            table.add_column("Birthday", width= 40, no_wrap=False)
+            table.add_column("Emails", width= 40, no_wrap=False)
+            table.add_column("Address", width= 40, no_wrap=False)
+            table.add_column("Note", width= 40, no_wrap=False)
+            
+            for record in self.data.values():
+                name = record.name
+                phones = ", ".join(str(phone) for phone in record.phones)
+                bday = str(record.birthday) if record.birthday else ""
+                emails = ", ".join(str(email) for email in record.emailes)
+                address = str(record.address) if record.address else ""
+                note = str(record.note) if record.note else ""
+                
+                table.add_row(name, phones, bday, emails, address, note)
+            
+            console.print(table)
