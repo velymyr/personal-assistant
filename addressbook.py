@@ -89,9 +89,9 @@ def show_all_address_book(*args):
 
 command_dict = {
     'add': [add, 'add contact'],
-    'show': [show_all_address_book, 'show'],
+    'show all': [show_all_address_book, 'show all address book'],
     'save': [address_book.save, 'save address book'],
-    'bd': [get_days_to_birthday, 'bd'],
+    'bday': [get_days_to_birthday, 'get day to birthday'],
     'remove': [remove_phone, 'remove phone from contacts'],
     'change': [change, 'change existing contact'],
     'delete': [delete_record, 'delete contact']
