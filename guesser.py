@@ -1,8 +1,8 @@
 import difflib
-import inspect
+# import inspect
 import functools
 from main_work_drive import address_book, get_days_to_birthday
-from ab_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
+from ab_classes import Record, Name, Phone, Birthday, Email, Address, Note
 filename = 'address_book'
 
 

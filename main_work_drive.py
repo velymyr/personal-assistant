@@ -1,5 +1,5 @@
 from datetime import datetime
-from ab_classes import AddressBook, Name, Phone, Record, Birthday, Email, Address, Note
+from ab_classes import AddressBook, Name, Phone, Record, Birthday, Email
 import re
 import pickle
 
@@ -214,25 +214,25 @@ def show_all_command(*args):
 
 
 # Команди додати, змінити, видалити телефон, вихід, показати все, показати контакт
-COMMANDS = {
-    exit_command: ("good bye", "bye", "exit", "end", "close", "quit", "0"),
-    add_contact: ("add ", "+ ", "1"),
-    change_phone: ("change ", "зміни ", "2"),
-    remove_phone: ("remove ", "delete ", "del ", "-", "3"),
-    show_all_command: ("show all", "show", "4"),
-    get_phone: ("phone ", "5"),
-    get_days_to_birthday: ("birthday", "bd", "6"),
-    delete_record: ("7"),
-    # add_note: ('note', 'нотаток'),
-    search_record: ('search', "find", '8'),
-    hello: ("hello", "hi", "!",)
-}
+# COMMANDS = {
+#     exit_command: ("good bye", "bye", "exit", "end", "close", "quit", "0"),
+#     add_contact: ("add ", "+ ", "1"),
+#     change_phone: ("change ", "зміни ", "2"),
+#     remove_phone: ("remove ", "delete ", "del ", "-", "3"),
+#     show_all_command: ("show all", "show", "4"),
+#     get_phone: ("phone ", "5"),
+#     get_days_to_birthday: ("birthday", "bd", "6"),
+#     delete_record: ("7"),
+#     # add_note: ('note', 'нотаток'),
+#     search_record: ('search', "find", '8'),
+#     hello: ("hello", "hi", "!",)
+# }
 
 
-def parser(text: str):
-    for cmd, kwds in COMMANDS.items():
-        for kwd in kwds:
-            if text.lower().startswith(kwd):
-                data = text[len(kwd):].strip().split()
-                return cmd, data
-    return no_command, []
+# def parser(text: str):
+#     for cmd, kwds in COMMANDS.items():
+#         for kwd in kwds:
+#             if text.lower().startswith(kwd):
+#                 data = text[len(kwd):].strip().split()
+#                 return cmd, data
+#     return no_command, []
