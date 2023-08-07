@@ -1,7 +1,7 @@
 import difflib
 import inspect
 import functools
-from main_work_drive import address_book
+from main_work_drive import address_book, get_days_to_birthday
 from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
 filename= 'address_book'
 
@@ -84,7 +84,7 @@ command_dict = {
     'add': [add, 'add contact'],
     'show': [show_all_address_book, 'show'],
     'save': [address_book.save, 'save address book'],
-    
+    'bd' : [get_days_to_birthday, 'bd'],
     'remove': [remove_phone, 'remove phone from contacts'],
     'change': [change, 'change existing contact'],
     'delete': [delete_record, 'delete contact']
@@ -103,26 +103,6 @@ def command_handler(user_input, command_dict):
         return f'An unknown command.'
 
 
-# like welcome message - to show all funcs for contact book etc.
-# def instruction(command_dict):
-#     result = []
-#     for func_name, func in command_dict.items():
-#         signature = inspect.signature(func[0])
-#         parameters = signature.parameters
-#         param_names = ' '.join(parameters.keys())
-
-#         if 'args' in parameters or 'kwargs' in parameters:
-#             result.append('{:<20s} {:<30s} {:s}'.format(
-#                 func_name, "", func[1]))
-#         else:
-#             result.append('{:<20s} {:<30s} {:s}'.format(
-#                 func_name, f"{param_names if param_names else ''}", func[1]))
-
-#     headers = '{:<20s} {:<30s} {:s}'.format(
-#         'Command', 'Parameters', 'Description')
-#     rows_command = headers + '\n' + '\n'.join(result)
-
-#     return rows_command.strip('\n')
 def instruction(command_dict):
     result = []
     for func_name, func in command_dict.items():
@@ -149,13 +129,14 @@ def parser_input(user_input: str, command_dict): #-> tuple():
 
 
 def main():
-    filename = "add_book"
+    filename = "address_book"
     try:
         address_book.load(filename)
         print("Address book loaded from file.")
     except FileNotFoundError:
         print("New address book created.")
     print("Please input command or start or menu")
+    #print(address_book.congratulate())
     while True:
         user_input = input('>>> ').lower()
 

@@ -184,7 +184,7 @@ class Record:
     def days_to_birthday(self, birthday: Birthday):
         result = main_bd(birthday)
         return result
-
+    
     def get_phones(self, res):
         result = f"{', '.join(str(p) for p in res.phones)}"
         return result
@@ -265,3 +265,22 @@ class AddressBook(UserDict):
             self.data = pickle.load(file)
         return self.data
 
+    def congratulate(self):
+        result = []
+        WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        current_year = dt.now().year
+        congratulate = {'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': []}
+        for account in self.data:
+            print(account)
+            if account[self.birthday]:
+                new_birthday = account[self.birthday].replace(year=current_year)
+                birthday_weekday = new_birthday.weekday()
+                if self.__get_current_week()[0] <= new_birthday.date() < self.__get_current_week()[1]:
+                    if birthday_weekday < 5:
+                        congratulate[WEEKDAYS[birthday_weekday]].append(account['name'])
+                    else:
+                        congratulate['Monday'].append(account['name'])
+        for key, value in congratulate.items():
+            if len(value):
+                result.append(f"{key}: {' '.join(value)}")
+        return '_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
