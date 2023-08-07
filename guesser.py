@@ -24,11 +24,11 @@ def input_errors(func):
 def add(*args):
     name = Name(input("Name: ")).value.strip()
     phones = Phone().value
-    birth = Birthday().value
+    birthday = Birthday().value
     email = Email().value.strip()
     address = Address(input("Address: ")).value
     note = Note(input("Note: ")).value
-    record = Record(name=name, phone=phones, birthday=birth,
+    record = Record(name=name, phone=phones, birthday=birthday,
                     email=email, address=address, note=note)
     return address_book.add_record(record)
 

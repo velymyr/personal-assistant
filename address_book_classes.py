@@ -34,7 +34,7 @@ class Phone(Field):
                 self.values = input(
                     "Phones(+12digits) (Введіть номер телефона + і дванадцять цифр): ")
             try:
-                for number in self.values.split(','):
+                for number in self.values.split(' '):
                     if re.match('^\+\d{12}$', number) or number == '':
                         result = f"{number[0]}{number[1]}{number[2]}{number[3]}({number[4]}{number[5]}){number[6]}{number[7]}{number[8]}-{number[9]}{number[10]}-{number[11]}{number[12]}"
                     # if re.match('^\+48\d{9}$', number) or re.match('^\\+38\d{10}$', number) or number == '':
@@ -80,6 +80,7 @@ class Birthday(Field):
             try:
                 if re.match('^\d{2}/\d{2}/\d{4}$', self.value):
                     self.value = dt.strptime(self.value.strip(), "%d/%m/%Y")
+                    self.value = self.value.date()
                     break
                 elif self.value == '':
                     break
@@ -89,8 +90,8 @@ class Birthday(Field):
                 print('Incorrect date! Please provide correct date format.')
 
     def __getitem__(self):
-        return self.value
-    #     return self.__value.strftime("%d/%m/%Y")
+        return self.value.date()
+        #return self.__value.strftime("%d/%m/%Y")
 
 
 class Email(Field):
