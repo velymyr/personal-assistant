@@ -8,6 +8,7 @@ import pickle
 import os
 # filename= 'address_book_1.txt'
 
+
 class Field:
 
     def __init__(self, value) -> None:
@@ -184,7 +185,7 @@ class Record:
     def days_to_birthday(self, birthday: Birthday):
         result = main_bd(birthday)
         return result
-    
+
     def get_phones(self, res):
         result = f"{', '.join(str(p) for p in res.phones)}"
         return result
@@ -254,8 +255,8 @@ class AddressBook(UserDict):
         with open(filename, "w") as file:
             json.dump(data_list, file)
 
-    def save(self, file_name):
-        with open(file_name + '.bin', 'wb') as file:
+    def save(self):
+        with open('address_book.bin', 'wb') as file:
             pickle.dump(self.data, file)
         return 'OK'
 
@@ -267,17 +268,21 @@ class AddressBook(UserDict):
 
     def congratulate(self):
         result = []
-        WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+        WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday',
+                    'Thursday', 'Friday', 'Saturday', 'Sunday']
         current_year = dt.now().year
-        congratulate = {'Monday': [], 'Tuesday': [], 'Wednesday': [], 'Thursday': [], 'Friday': []}
+        congratulate = {'Monday': [], 'Tuesday': [],
+                        'Wednesday': [], 'Thursday': [], 'Friday': []}
         for account in self.data:
             print(account)
             if account[self.birthday]:
-                new_birthday = account[self.birthday].replace(year=current_year)
+                new_birthday = account[self.birthday].replace(
+                    year=current_year)
                 birthday_weekday = new_birthday.weekday()
                 if self.__get_current_week()[0] <= new_birthday.date() < self.__get_current_week()[1]:
                     if birthday_weekday < 5:
-                        congratulate[WEEKDAYS[birthday_weekday]].append(account['name'])
+                        congratulate[WEEKDAYS[birthday_weekday]].append(
+                            account['name'])
                     else:
                         congratulate['Monday'].append(account['name'])
         for key, value in congratulate.items():

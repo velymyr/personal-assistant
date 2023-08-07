@@ -158,6 +158,8 @@ def hello(*args):
     return "How can I help you?"
 
 # Невідома команда пуста команда
+
+
 def no_command(*args, **kwargs):
     return "Unknown command"
 
@@ -174,6 +176,7 @@ def remove_phone(*args):
         return rec.remove_phone(phone)
     return f"No contact {name} in address book"
 
+
 def search_record(*args):
     elem = args[0]
     address_book.save('search')
@@ -187,7 +190,7 @@ def search_record(*args):
     fh.close()
     with open('result', "r") as fh:
         address_book_search = AddressBook()
-        #with open( + '.bin', 'rb') as file:
+        # with open( + '.bin', 'rb') as file:
         address_book_search.data = pickle.load(file)
         # for line in fh:
         #     data = line.strip().split(" : ")
@@ -211,26 +214,25 @@ def show_all_command(*args):
 
 
 # Команди додати, змінити, видалити телефон, вихід, показати все, показати контакт
-COMMANDS = {
-    exit_command: ("good bye", "bye", "exit", "end", "close", "quit", "0"),
-    add_contact: ("add ", "+ ", "1"),
-    change_phone: ("change ", "зміни ", "2"),
-    remove_phone: ("remove ", "delete ", "del ", "-", "3"),
-    show_all_command: ("show all", "show", "4"),
-    get_phone: ("phone ", "5"),
-    get_days_to_birthday: ("birthday", "bd", "6"),
-    delete_record: ("7"),
-    # add_note: ('note', 'нотаток'),
-    search_record: ('search', "find", '8'),
-    hello: ("hello", "hi", "!",)
-}
+# COMMANDS = {
+#     exit_command: ("good bye", "bye", "exit", "end", "close", "quit", "0"),
+#     add_contact: ("add ", "+ ", "1"),
+#     change_phone: ("change ", "зміни ", "2"),
+#     remove_phone: ("remove ", "delete ", "del ", "-", "3"),
+#     show_all_command: ("show all", "show", "4"),
+#     get_phone: ("phone ", "5"),
+#     get_days_to_birthday: ("birthday", "bd", "6"),
+#     delete_record: ("7"),
+#     # add_note: ('note', 'нотаток'),
+#     search_record: ('search', "find", '8'),
+#     hello: ("hello", "hi", "!",)
+# }
 
 
-def parser(text: str):
-    for cmd, kwds in COMMANDS.items():
-        for kwd in kwds:
-            if text.lower().startswith(kwd):
-                data = text[len(kwd):].strip().split()
-                return cmd, data
-    return no_command, []
-
+# def parser(text: str):
+#     for cmd, kwds in COMMANDS.items():
+#         for kwd in kwds:
+#             if text.lower().startswith(kwd):
+#                 data = text[len(kwd):].strip().split()
+#                 return cmd, data
+#     return no_command, []
