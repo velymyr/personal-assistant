@@ -36,9 +36,7 @@ class Phone(Field):
             try:
                 for number in self.values.split(' '):
                     if re.match('^\+\d{12}$', number) or number == '':
-                        result = f"{number[0]}{number[1]}{number[2]}{number[3]}({number[4]}{number[5]}){number[6]}{number[7]}{number[8]}-{number[9]}{number[10]}-{number[11]}{number[12]}"
-                    # if re.match('^\+48\d{9}$', number) or re.match('^\\+38\d{10}$', number) or number == '':
-                        self.value.append(result)
+                        self.value.append(number)
                     else:
                         raise ValueError
             except ValueError:
@@ -195,10 +193,11 @@ class Record:
         return f"{self.name} : {', '.join(p for p in self.phones)}  {(str(self.birthday))} {', '.join(p for p in self.emailes)} {(str(self.address))} {(str(self.note))} "
 
     def remove_phone(self, phone):
+        #print(f'phone={phone)}')
         for idx, p in enumerate(self.phones):
-            print(len(p.value))
-            print(len(phone.value))
-            if phone.value.strip() == p.value.strip():
+            print(f'p= {self.phones[idx]}')
+            #print(f'phone={phone}')
+            if phone == p:
                 old_phone = (self.phones[idx])
                 self.phones.remove(self.phones[idx])
                 return f"The phone {old_phone} is deleted"

@@ -51,9 +51,10 @@ def delete_record(*args):
 def remove_phone(*args):
     name = Name(args[0])
     phone = Phone(args[1])
+    #print(phone.value)
     rec: Record = address_book.get(str(name))
     if rec:
-        return rec.remove_phone(phone)
+        return rec.remove_phone(phone.values)
     return f"No contact {name} in address book"
 
 
@@ -73,9 +74,9 @@ command_dict = {
     'add': [add, 'add contact'],
     'show': [show_all_command, 'show'],
     'save': [save_address_book, 'save address book'],
-    'remove phone': [remove_phone, 'remove phone from contacts'],
+    'remove': [remove_phone, 'remove phone from contacts'],
     'change': [change, 'change existing contact'],
-    'delete contact': [delete_record, 'delete contact']
+    'delete': [delete_record, 'delete contact']
 }
 
 
