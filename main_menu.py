@@ -2,7 +2,7 @@
 
 from sort import sorter_starter
 from addressbook import addressbook_starter #заглушка адресбука
-from my_Notes import notes_main as notes_starter  
+from Notes import notes_main as notes_starter  
 
 def menu():
 
