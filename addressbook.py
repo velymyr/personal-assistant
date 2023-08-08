@@ -1,11 +1,13 @@
-
 import difflib
 import inspect
 import functools
 from rich.console import Console
 from rich.table import Table
-from main_work_drive import address_book, get_days_to_birthday
 from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
+from datetime import datetime as dt
+
+
+address_book = AddressBook()
 filename = 'address_book'
 
 
@@ -53,9 +55,9 @@ def delete_record(*args):
 
 @input_errors
 def remove_phone(*args):
-    name = Name(args[0])
-    phone = Phone(args[1])
-    # print(phone.value)
+
+    name = Name(input("Name: ")).value.strip()
+    phone = Phone(input("Phone: "))
     rec: Record = address_book.get(str(name))
     if rec:
         return rec.remove_phone(phone.values)
@@ -64,13 +66,25 @@ def remove_phone(*args):
 
 @input_errors
 def search(*args)-> str:
-    
-    return address_book.search(*args)
+    text = input("Text for searching: ")
+    return address_book.search(text)
 
 
 def show_all_address_book():
     if Record.__name__:
         return address_book.show_all_address_book()
+
+
+def get_days_to_birthday(*args):
+    name = Name(input("Name: ")).value.strip()
+    res: Record = address_book.get(str(name))
+    result = res.days_to_birthday(res.birthday)
+    if result == 0:
+        return f'{name } tomorrow birthday'
+    if result == 365:
+        return f'{name} today is birthday'
+    return f'{name} until the next birthday left {result} days'
+
 
 def who_has_b_after_n_days():
     days = input(str('After how many days?\n>>> '))
@@ -127,7 +141,6 @@ def instruction(command_dict):
     console.print(table)
 
 
-# example of parser user_input
 def parser_input(user_input: str, command_dict):  # -> tuple():
     command = None
     arguments = ''
@@ -140,7 +153,6 @@ def parser_input(user_input: str, command_dict):  # -> tuple():
     return command, arguments
 
 
-# def main():
 def addressbook_starter():
     filename = "address_book"
     try:
@@ -156,10 +168,8 @@ def addressbook_starter():
     
     while True:
         user_input = input('Input a command\n>>>').lower()
-        # input 'menu' to show all funcs
         if user_input == 'menu':
             instruction(command_dict)
-            # print("Please make a choice")
         elif user_input in ("exit", "0"):
             # del_file_if_empty()
             print('Contact book closed')
