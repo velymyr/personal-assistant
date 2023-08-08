@@ -4,7 +4,7 @@ import functools
 from rich.console import Console
 from rich.table import Table
 from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
-from datetime import datetime as dt
+from datetime import date, timedelta, datetime
 
 
 address_book = AddressBook()
@@ -86,14 +86,27 @@ def get_days_to_birthday(*args):
     return f'{name} until the next birthday left {result} days'
 
 
-def who_has_b_after_n_days():
-    days = input(str('After how many days?\n>>> '))
+def who_has_bd_n_days():
+    days = input(str('How many days?\n>>> '))
     try:
         n_days = int(days)
     except TypeError:
         return 'This is not a number. Give me a number of days.'
-    
-    return address_book.who_has_birthday_after_n_days(n_days)
+
+    result = []
+    result_dict = AddressBook()
+    current_year = datetime.now().year
+
+    for account in address_book.data.values():
+        if account.birthday:
+            new_birthday = account.birthday.replace(year=current_year)
+            next_date = (datetime.now() + timedelta(days=n_days)).date()
+            if date.today() <= new_birthday < next_date:
+                result.append(account)
+    for item in result:
+        result_dict[item.name] = item
+
+    return result_dict.show_all_address_book()
 
 
 def exit_book():
@@ -108,7 +121,7 @@ command_dict = {
     'show all': [show_all_address_book, 'to show all contacts'],
     'save': [address_book.save, 'to save address book'],
     'bday': [get_days_to_birthday, 'to get day to birthday'],
-    'blist': [who_has_b_after_n_days, 'to show bday boys after N days'],
+    'blist': [who_has_bd_n_days, 'to show bday boys during N days'],
     'remove': [remove_phone, 'to remove phone from contact'],
     'change': [change, 'to change existing contact'],
     'delete': [delete_record, 'to delete existing contact'],
