@@ -251,17 +251,17 @@ def instruction(command_dict):
 
 
 def notes_main():
-    print("***Hello I`m a notebook.***\n")
+    print("\n***Hello I`m a notebook.***\n")
     instruction(note_commands)
     nb.load()
     while True:
-        user_input_command = str(input("Input a command\n>>>"))
+        user_input_command = str(input("\nInput a command\n>>>"))
         command = pars(user_input_command.lower(), note_commands)
         if user_input_command == 'menu':
             instruction(note_commands)
         elif user_input_command in ("exit", "0"):
             nb.save()
-            print('Notebook closed')
+            print('\nNotebook closed')
             break
         elif user_input_command == 'show all':
            show_notes()

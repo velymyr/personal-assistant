@@ -160,21 +160,21 @@ def addressbook_starter():
     filename = "address_book"
     try:
         address_book.load(filename)
-        print("Address book loaded from file.")
+        print("\nAddress book loaded from file.")
     except FileNotFoundError:
         print("New address book created.")
         
-    print("/n***Hello I`m a contact book.***\n")
+    print("\n***Hello I`m a contact book.***\n")
     instruction(command_dict)
     
     # print(address_book.congratulate())
     while True:
-        user_input = input('Input a command\n>>>').lower()
+        user_input = input('\nInput a command\n>>>').lower()
         # input 'menu' to show all funcs
         if user_input == 'menu':
             instruction(command_dict)
             # print("Please make a choice")
-        elif user_input in ("exit", "0"):
+        elif user_input in ("exit", "0", "close"):
             # del_file_if_empty()
             print('Contact book closed')
             address_book.save()
