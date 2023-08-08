@@ -77,13 +77,12 @@ def remove_phone(*args):
     return f"No contact {name} in address book"
 
 
-# @input_errors
-# def save(*args):
-#     if Record.__name__:
-#         return save_address_book
+@input_errors
+def search(*args)-> str:
+    
+    return address_book.search(*args)
 
 
-# @input_errors
 def show_all_address_book():
     if Record.__name__:
         return address_book.show_all_address_book()
@@ -114,6 +113,7 @@ command_dict = {
     'remove': [remove_phone, 'to remove phone from contact'],
     'change': [change, 'to change existing contact'],
     'delete': [delete_record, 'to delete existing contact'],
+    'search': [search, 'search contact by any match'],
     'menu': [menu, 'to see list of commands'],
     "0 or exit": [exit_book, 'to exit']
 }

@@ -5,8 +5,8 @@ from datetime import datetime as dt
 from datetime import date, timedelta
 from rich.console import Console
 from rich.table import Table
-# import csv
-# import json
+import csv
+import json
 import pickle
 import os
 # filename= 'address_book_1.txt'
@@ -194,7 +194,30 @@ class Record:
         return result
 
     def __str__(self) -> str:
-        return f"{self.name} : {', '.join(p for p in self.phones)}  {(str(self.birthday))} {', '.join(p for p in self.emailes)} {(str(self.address))} {(str(self.note))} "
+
+        console = Console()
+        table = Table(show_header=True, header_style="bold magenta", width=120,show_lines=True)
+        table.add_column("Name", width= 40, no_wrap=False)
+        table.add_column("Phones", width= 40, no_wrap=False)
+        table.add_column("Birthday", width= 40, no_wrap=False)
+        table.add_column("Emails", width= 40, no_wrap=False)
+        table.add_column("Address", width= 40, no_wrap=False)
+        table.add_column("Note", width= 40, no_wrap=False)
+            
+        # for record in self.data.values():
+        name = self.name
+        phones = ", ".join(str(phone) for phone in self.phones)
+        bday = str(self.birthday) if self.birthday else ""
+        emails = ", ".join(str(email) for email in self.emailes)
+        address = str(self.address) if self.address else ""
+        note = str(self.note) if self.note else ""
+                
+        table.add_row(name, phones, bday, emails, address, note)
+            
+        console.print(table)
+        return ""
+        
+        # return f": {self.name} | {', '.join(p for p in self.phones)} | {(str(self.birthday))} | {', '.join(p for p in self.emailes)} | {(str(self.address))} | {(str(self.note))} |"
 
     def remove_phone(self, phone):
         for idx, p in enumerate(self.phones):
@@ -210,7 +233,9 @@ class AddressBook(UserDict):
 
     def add_record(self, record: Record):
         self.data[str(record.name)] = record
-        return f"Contact {record} add success"
+        print(f"\nContact  '{record.name}' successfully added")
+
+        return record
 
     def __str__(self):  # -> str:
         return "\n".join(str(r) for r in self.data.values())
@@ -294,14 +319,6 @@ class AddressBook(UserDict):
         return '_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
     
 
-
-
-
-
-
-
-
-    
     def who_has_birthday_after_n_days(self, n_days):      
         current_date = dt.now().date()
         future_birthday = current_date + timedelta(days=n_days)
@@ -345,3 +362,24 @@ class AddressBook(UserDict):
                 table.add_row(name, phones, bday, emails, address, note)
             
             console.print(table)
+            return "Success!\n"
+    
+    
+    def search(self, string:str):
+        output = ''
+        for key in self.keys():
+            rec = self[key]
+            phone = '.'.join(phone for phone in rec.phones)
+
+            if rec.birthday == "":
+                show_birthday = ""
+            else:
+                show_birthday = dt.strftime(rec.birthday, '%d/%m/%Y')
+                
+            emailes = ".".join(email for email in rec.emailes)
+            address = rec.address    
+            note = rec.note   
+            
+            if string in str(rec.name.lower()) or string in phone or string in show_birthday or string in emailes or string in address or string in note:
+                output += str(rec)
+        return output
