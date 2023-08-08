@@ -216,13 +216,17 @@ def show_notes():
 
 def search():
     user_choice = input("\n***Search***\nEnter '1' to search in note\nEnter '2' to search in tags\n>>>")
-    search_key = input("Enter a search keyword\n>>>")
-    if user_choice == '1':
-      return nb.search_note(search_key)
-    elif user_choice == '2':
-        return nb.search_tag(search_key)
+    if user_choice == "1" or user_choice == "2":
+        search_key = input("Enter a search keyword\n>>>")
+        if user_choice == '1':
+          return nb.search_note(search_key)
+        elif user_choice == '2':
+            return nb.search_tag(search_key)
+        else:
+          return "Wrong input"
     else:
-       return "Wrong input"
+       print("\n***Ooopd***\nWrong input")
+       search()
 
 def menu():
     pass
