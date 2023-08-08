@@ -191,7 +191,7 @@ def delete_note():
             if 1 <= x <= len(keys):
                 note_to_delete = keys[x - 1]
                 del nb.data[note_to_delete]
-                return f"Note '{note_to_delete}' has been deleted."
+                print(f"Note '{note_to_delete}' has been deleted.")
             elif x == 0:
                return 'Exit "Delete func" success'
             else:
