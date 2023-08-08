@@ -269,6 +269,16 @@ class AddressBook(UserDict):
             self.data = pickle.load(file)
         return self.data
 
+    def get_current_week(self):
+        now = dt.now()
+        current_weekday = now.weekday()
+        if current_weekday < 5:
+            week_start = now - timedelta(days=2 + current_weekday)
+        else:
+            week_start = now - timedelta(days=current_weekday - 5)
+        return [week_start.date(), week_start.date() + timedelta(days=7)]
+
+
     def congratulate(self):
         result = []
         WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday',
@@ -276,42 +286,48 @@ class AddressBook(UserDict):
         current_year = dt.now().year
         congratulate = {'Monday': [], 'Tuesday': [],
                         'Wednesday': [], 'Thursday': [], 'Friday': []}
-        for account in self.data:
-            print(account)
-            if account[self.birthday]:
-                new_birthday = account[self.birthday].replace(
-                    year=current_year)
+        for rec in self.data.values():
+            #print(rec.birthday)
+            if rec.birthday is not None:
+                new_birthday = rec.birthday.replace(year=current_year)
+                #print(new_birthday)
                 birthday_weekday = new_birthday.weekday()
-                if self.__get_current_week()[0] <= new_birthday.date() < self.__get_current_week()[1]:
+                if self.get_current_week()[0] <= new_birthday < self.get_current_week()[1]:
                     if birthday_weekday < 5:
-                        congratulate[WEEKDAYS[birthday_weekday]].append(
-                            account['name'])
+                        congratulate[WEEKDAYS[birthday_weekday]].append(rec.name)
                     else:
-                        congratulate['Monday'].append(account['name'])
+                        congratulate['Monday'].append(rec.name)
         for key, value in congratulate.items():
             if len(value):
-                result.append(f"{key}: {' '.join(value)}")
-        return '_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
+                result.append(f"Don't forget to Say Happy Birthday in {key} to {' '.join(value)}")
+        return '_' * 60 + '\n' + '\n'.join(result) + '\n' + '_' * 60
     
 
 
 
     def who_has_birthday_after_n_days(self, n_days):      
-        current_date = dt.now().date()
+        current_date = dt.now()
+        current_year = dt.now().year
         future_birthday = current_date + timedelta(days=n_days)
+        #print (future_birthday.date())
         contacts_with_birthday = []
 
-        for record in self.data.values():
-            if record.birthday is not None:
-                remaining_days_in_year = (date(current_date.year, 12, 31) - future_birthday).days
-                if remaining_days_in_year > n_days:
-                    birthday_this_year = record.birthday.replace(year=current_date.year)
-                    if future_birthday == birthday_this_year:
-                        contacts_with_birthday.append(record.name)
+        for rec in self.data.values():
+            #print (rec)
+            if rec.birthday is not None:
+                new_year= date(current_year,12,31)
+                #print(new_year)
+                remaining_days_in_year = new_year - future_birthday.date()
+                #print (remaining_days_in_year.days)
+                if remaining_days_in_year.days > n_days:
+                    birthday_this_year = rec.birthday.replace(year=current_year)
+                    #print (birthday_this_year)
+                    if future_birthday.date() == birthday_this_year:
+                        contacts_with_birthday.append(rec.name)
                 else: 
-                    birthday_next_year = record.birthday.replace(year=(current_date.year + 1))
-                    if future_birthday == birthday_next_year:
-                        contacts_with_birthday.append(record.name)
+                    birthday_next_year = rec.birthday.replace(year=(current_year + 1))
+                    if future_birthday.date() == birthday_next_year:
+                        contacts_with_birthday.append(rec.name)
 
         if contacts_with_birthday:
             return ', '.join(name for name in contacts_with_birthday)

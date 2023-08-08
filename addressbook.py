@@ -6,6 +6,7 @@
 #     main()
 import difflib
 import inspect
+import datetime
 import functools
 from rich.console import Console
 from rich.table import Table
@@ -163,11 +164,11 @@ def addressbook_starter():
         print("Address book loaded from file.")
     except FileNotFoundError:
         print("New address book created.")
-        
+    
     print("/n***Hello I`m a contact book.***\n")
     instruction(command_dict)
+    print(address_book.congratulate())
     
-    # print(address_book.congratulate())
     while True:
         user_input = input('Input a command\n>>>').lower()
         # input 'menu' to show all funcs
