@@ -301,22 +301,22 @@ class AddressBook(UserDict):
         current_year = dt.now().year
         congratulate = {'Monday': [], 'Tuesday': [],
                         'Wednesday': [], 'Thursday': [], 'Friday': []}
-        for account in self.data:
-            print(account)
-            if account[self.birthday]:
-                new_birthday = account[self.birthday].replace(
-                    year=current_year)
+        for account in self.keys():
+            
+            
+            if self[account].birthday:
+                new_birthday = self[account].birthday.replace(year=current_year)
                 birthday_weekday = new_birthday.weekday()
-                if self.__get_current_week()[0] <= new_birthday.date() < self.__get_current_week()[1]:
+                next_week = (dt.now() + timedelta(days=7)).date()
+                if date.today() <= new_birthday < next_week:
                     if birthday_weekday < 5:
-                        congratulate[WEEKDAYS[birthday_weekday]].append(
-                            account['name'])
+                        congratulate[WEEKDAYS[birthday_weekday]].append(self[account].name)
                     else:
-                        congratulate['Monday'].append(account['name'])
+                        congratulate['Monday'].append(self[account].name)
         for key, value in congratulate.items():
             if len(value):
-                result.append(f"{key}: {' '.join(value)}")
-        return '_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
+                result.append(f"{key}: {', '.join(value)}")
+        return '! Do not forget to congratulate !\n'+'_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
     
 
     def who_has_birthday_after_n_days(self, n_days):      
