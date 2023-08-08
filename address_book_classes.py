@@ -1,14 +1,14 @@
 from collections import UserDict
-from bd import main_bd
-import re
-from datetime import datetime as dt
-from datetime import date, timedelta
-from rich.console import Console
-from rich.table import Table
+from datetime import date, timedelta, datetime
 import csv
 import json
-import pickle
 import os
+import pickle
+import re
+from rich.console import Console
+from rich.table import Table
+
+from bd import main_bd
 
 
 class Field:
@@ -83,7 +83,8 @@ class Birthday(Field):
                 self.value = input("Birthday date(dd/mm/YYYY): ")
             try:
                 if re.match('^\d{2}/\d{2}/\d{4}$', self.value):
-                    self.value = dt.strptime(self.value.strip(), "%d/%m/%Y")
+                    self.value = datetime.strptime(
+                        self.value.strip(), "%d/%m/%Y")
                     self.value = self.value.date()
                     break
                 elif self.value == '':
@@ -195,14 +196,15 @@ class Record:
     def __str__(self) -> str:
 
         console = Console()
-        table = Table(show_header=True, header_style="bold magenta", width=120,show_lines=True)
-        table.add_column("Name", width= 40, no_wrap=False)
-        table.add_column("Phones", width= 40, no_wrap=False)
-        table.add_column("Birthday", width= 40, no_wrap=False)
-        table.add_column("Emails", width= 40, no_wrap=False)
-        table.add_column("Address", width= 40, no_wrap=False)
-        table.add_column("Note", width= 40, no_wrap=False)
-            
+        table = Table(show_header=True, header_style="bold magenta",
+                      width=120, show_lines=True)
+        table.add_column("Name", width=40, no_wrap=False)
+        table.add_column("Phones", width=40, no_wrap=False)
+        table.add_column("Birthday", width=40, no_wrap=False)
+        table.add_column("Emails", width=40, no_wrap=False)
+        table.add_column("Address", width=40, no_wrap=False)
+        table.add_column("Note", width=40, no_wrap=False)
+
         # for record in self.data.values():
         name = self.name
         phones = ", ".join(str(phone) for phone in self.phones)
@@ -210,12 +212,12 @@ class Record:
         emails = ", ".join(str(email) for email in self.emailes)
         address = str(self.address) if self.address else ""
         note = str(self.note) if self.note else ""
-                
+
         table.add_row(name, phones, bday, emails, address, note)
-            
+
         console.print(table)
         return ""
-        
+
         # return f": {self.name} | {', '.join(p for p in self.phones)} | {(str(self.birthday))} | {', '.join(p for p in self.emailes)} | {(str(self.address))} | {(str(self.note))} |"
 
     def remove_phone(self, phone):
@@ -297,19 +299,20 @@ class AddressBook(UserDict):
         result = []
         WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Sunday']
-        current_year = dt.now().year
+        current_year = datetime.now().year
         congratulate = {'Monday': [], 'Tuesday': [],
                         'Wednesday': [], 'Thursday': [], 'Friday': []}
         for account in self.keys():
-            
-            
+
             if self[account].birthday:
-                new_birthday = self[account].birthday.replace(year=current_year)
+                new_birthday = self[account].birthday.replace(
+                    year=current_year)
                 birthday_weekday = new_birthday.weekday()
-                next_week = (dt.now() + timedelta(days=7)).date()
+                next_week = (datetime.now() + timedelta(days=7)).date()
                 if date.today() <= new_birthday < next_week:
                     if birthday_weekday < 5:
-                        congratulate[WEEKDAYS[birthday_weekday]].append(self[account].name)
+                        congratulate[WEEKDAYS[birthday_weekday]].append(
+                            self[account].name)
                     else:
                         congratulate['Monday'].append(self[account].name)
         for key, value in congratulate.items():
@@ -318,7 +321,7 @@ class AddressBook(UserDict):
         return '! Do not forget to congratulate !\n'+'_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
 
     def who_has_birthday_after_n_days(self, n_days):
-        current_date = dt.now().date()
+        current_date = datetime.now().date()
         future_birthday = current_date + timedelta(days=n_days)
         contacts_with_birthday = []
 
@@ -329,51 +332,54 @@ class AddressBook(UserDict):
                 date_object = record.birthday.value
             else:
                 try:
-                    date_object = dt.strptime(record.birthday, "%Y-%m-%d").date()
+                    date_object = dt.strptime(
+                        record.birthday, "%Y-%m-%d").date()
                 except (ValueError, TypeError):
                     continue
 
-            remaining_days_in_year = (date(current_date.year, 12, 31) - future_birthday).days
+            remaining_days_in_year = (
+                date(current_date.year, 12, 31) - future_birthday).days
             if remaining_days_in_year > n_days:
-                birthday_this_year = date_object.replace(year=current_date.year)
+                birthday_this_year = date_object.replace(
+                    year=current_date.year)
                 if future_birthday == birthday_this_year:
                     contacts_with_birthday.append(record.name)
             else:
-                birthday_next_year = date_object.replace(year=(current_date.year + 1))
+                birthday_next_year = date_object.replace(
+                    year=(current_date.year + 1))
                 if future_birthday == birthday_next_year:
                     contacts_with_birthday.append(record.name)
 
         if contacts_with_birthday:
             return ', '.join(name for name in contacts_with_birthday)
         else:
-            return f"Nobody has a birthday after {n_days} days"   
-
+            return f"Nobody has a birthday after {n_days} days"
 
     def show_all_address_book(self):
-            console = Console()
-            table = Table(show_header=True, header_style="bold magenta", width=120,show_lines=True)
-            table.add_column("Name", width= 40, no_wrap=False)
-            table.add_column("Phones", width= 40, no_wrap=False)
-            table.add_column("Birthday", width= 40, no_wrap=False)
-            table.add_column("Emails", width= 40, no_wrap=False)
-            table.add_column("Address", width= 40, no_wrap=False)
-            table.add_column("Note", width= 40, no_wrap=False)
-            
-            for record in self.data.values():
-                name = record.name
-                phones = ", ".join(str(phone) for phone in record.phones)
-                bday = str(record.birthday) if record.birthday else ""
-                emails = ", ".join(str(email) for email in record.emailes)
-                address = str(record.address) if record.address else ""
-                note = str(record.note) if record.note else ""
-                
-                table.add_row(name, phones, bday, emails, address, note)
-            
-            console.print(table)
-            return "Success!\n"
-    
-    
-    def search(self, string:str):
+        console = Console()
+        table = Table(show_header=True, header_style="bold magenta",
+                      width=120, show_lines=True)
+        table.add_column("Name", width=40, no_wrap=False)
+        table.add_column("Phones", width=40, no_wrap=False)
+        table.add_column("Birthday", width=40, no_wrap=False)
+        table.add_column("Emails", width=40, no_wrap=False)
+        table.add_column("Address", width=40, no_wrap=False)
+        table.add_column("Note", width=40, no_wrap=False)
+
+        for record in self.data.values():
+            name = record.name
+            phones = ", ".join(str(phone) for phone in record.phones)
+            bday = str(record.birthday) if record.birthday else ""
+            emails = ", ".join(str(email) for email in record.emailes)
+            address = str(record.address) if record.address else ""
+            note = str(record.note) if record.note else ""
+
+            table.add_row(name, phones, bday, emails, address, note)
+
+        console.print(table)
+        return "Success!\n"
+
+    def search(self, string: str):
         output = ''
         for key in self.keys():
             rec = self[key]
@@ -383,11 +389,11 @@ class AddressBook(UserDict):
                 show_birthday = ""
             else:
                 show_birthday = dt.strftime(rec.birthday, '%d/%m/%Y')
-                
+
             emailes = ".".join(email for email in rec.emailes)
-            address = rec.address    
-            note = rec.note   
-            
+            address = rec.address
+            note = rec.note
+
             if string in str(rec.name.lower()) or string in phone or string in show_birthday or string in emailes or string in address or string in note:
                 output += str(rec)
         return output
