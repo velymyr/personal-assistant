@@ -85,75 +85,90 @@ class NoteBook(UserDict):
             n = 1
             console = Console()
             table = Table(show_header=True, header_style="bold magenta", width=60,show_lines=True)
-            table.add_column("Number by order", max_width= None)
+            table.add_column("#", max_width= None)
             table.add_column("Note", width= 20, no_wrap=False)
             table.add_column("Tags")
             
             for key, tags in self.data.items():
-                print(key)
                 table.add_row(str(n), str(key), ", ".join(str(t) for t in self.data[key]))
                 n += 1
             
             console.print(table)
 
-    def change_note(self):
+    def edit_note(self):
+        print("\n***Edit func***")
         self.show_notes()
         
-        x = input("Choose the note you want to edit by number\n>>> ")
+        x = input("***Notebook says***\nChoose the note you want to edit by number ('0' - to exit delete func):\n>>> ")
         
         try:
             x = int(x)
             keys = list(self.data.keys())
             if 1 <= x <= len(keys):
                 note_to_edit = keys[x - 1]
-                new_note = input(f"Enter the new content for note '{note_to_edit}': ")
-                new_tags = input(f"Enter the new tags for note '{note_to_edit}' (comma-separated): ").split(",")
+                new_note = input(f"***Notebook says***\nEnter the new content for note '{note_to_edit}': ")
+                new_tags = input(f"***Notebook says***\nEnter the new tags for note '{note_to_edit}' (comma-separated): ").split(",")
                 
                 self.data[new_note] = [tag.strip() for tag in new_tags]
                 if note_to_edit != new_note:
                     del self.data[note_to_edit]
-                print(f"Note '{note_to_edit}' has been updated.")
+                print(f"***Notebook says***\nNote '{note_to_edit}' has been updated.")
+            elif x == 0:
+               return 'Exit "Edit func" success'
             else:
-                print("Invalid input. Please choose a valid number.")
+                print("\n***Ooops***\nInvalid input. Please choose a valid number.")
+                nb.edit_note()
         except ValueError:
-            print("Invalid input. Please enter a valid number.")
+            print("\n***Ooops***\nInvalid input. Please enter a number.")
+            nb.edit_note()
 
     def search_note(self, text):
-        found_entries = []
+        found_fields = []
         for key, value in self.items():
             if str(key).find(text) != -1:
-                found_entries.append((key, value))
-        if found_entries:
-            print("{:<15} {:<15}".format("Key", "Value"))
-            print("=" * 30)
-            for entry in found_entries:
-                print("{:<15} {:<15}".format(str(entry[0]), str(entry[1])))
+                found_fields.append((key, value))
+        
+        console = Console()
+        table = Table(show_header=True, header_style="bold magenta", width=60, show_lines=True)
+        table.add_column("Note", width=20, no_wrap=False)
+        table.add_column("Tags")
+        
+        for obj in found_fields:
+            table.add_row(str(obj[0]), str(obj[1]))
+        
+        if found_fields:
+            return console.print(table)
         else:
-            print("No matching entries found.")
+            return console.print("\n***Ooops***\nNo matching found.")
 
     def search_tag(self, text):
-        found_entries = []
-
+        found_tags = []
+        
         for key, value in self.items():
             tag_lst = ', '.join(str(v) for v in value)
             if text in tag_lst:
-                found_entries.append((str(key), tag_lst))
-
-        if found_entries:
-            print("{:<15} {:<15}".format("Key", "Tags"))
-            print("=" * 30)
-            for entry in found_entries:
-                print("{:<15} {:<15}".format(entry[0], entry[1]))
+                found_tags.append((str(key), tag_lst))
+        
+        console = Console()
+        table = Table(show_header=True, header_style="bold magenta", width=60, show_lines=True)
+        table.add_column("Key", width=20, no_wrap=False)
+        table.add_column("Tags")
+        
+        for obj in found_tags:
+            table.add_row(str(obj[0]), str(obj[1]))
+        
+        if found_tags:
+            return console.print(table)
         else:
-            print("No matching entries found.")
+            return console.print("\n***Ooops***\nNo matching found.")
 
     
 nb = NoteBook()
 
 
 def add_note():
-    user_input_note = input('Input your note\n>>>')
-    user_input_tags = input('Input tags for a note\n>>>')
+    user_input_note = input('\n***Notebook says***\nInput your note:\n>>>')
+    user_input_tags = input('***Notebook says***\nInput tags for a note (space-separated):\n>>>')
     user_input_tags = user_input_tags.strip().split()
     tags = Tags()
     for user_tag in user_input_tags:
@@ -162,13 +177,13 @@ def add_note():
         tags.tags.append(tag)
     note = Note(user_input_note)
     nb.add_note(note, tags)
-    return "Note has been added"
+    return "You are good!!!\nNote has been added"
 
 
 def delete_note():
         nb.show_notes()
         
-        x = input("Choose the note you want to delete by number\n>>> ")
+        x = input("\n***Delete func***\nChoose the note you want to delete by number ('0' - to exit delete func):\n>>> ")
         
         try:
             x = int(x)
@@ -176,15 +191,19 @@ def delete_note():
             if 1 <= x <= len(keys):
                 note_to_delete = keys[x - 1]
                 del nb.data[note_to_delete]
-                return(f"Note '{note_to_delete}' has been deleted.")
+                return f"Note '{note_to_delete}' has been deleted."
+            elif x == 0:
+               return 'Exit "Delete func" success'
             else:
-                return("Invalid input. Please choose a valid number.")
+                print("\n***Ooops***\nInvalid input. Please enter a valid number.")
+                delete_note()
         except ValueError:
-            return("Invalid input. Please enter a valid number.")
+            print("\n***Ooops***\nInvalid input. Please enter a number.")
+            delete_note()
 
 
 def change_note():
-   return nb.change_note()
+   return nb.edit_note()
 
 
 def exit_notes():
@@ -196,7 +215,7 @@ def show_notes():
 
 
 def search():
-    user_choice = input("Enter '1' to search in note\nEnter '2' to search in tags\n>>>")
+    user_choice = input("\n***Search***\nEnter '1' to search in note\nEnter '2' to search in tags\n>>>")
     search_key = input("Enter a search keyword\n>>>")
     if user_choice == '1':
       return nb.search_note(search_key)
@@ -251,7 +270,7 @@ def instruction(command_dict):
 
 
 def notes_main():
-    print("***Hello I`m a notebook.***\n")
+    print("\n\n***Hello I`m a notebook.***\n")
     instruction(note_commands)
     nb.load()
     while True:
@@ -271,7 +290,9 @@ def notes_main():
             else:
                 result = command_handler(user_input_command, note_commands)
             nb.save()
-            print(result)
+            if result:
+               print(result)
+
 
 
 if __name__ == "__main__":
