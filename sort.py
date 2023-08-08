@@ -127,7 +127,7 @@ def sorter_starter():
         try:
             # do not forget to change path lib sys.argv[1]
             path = Path(input("|>>> "))
-            if path.name.lower() in ("close", "exit", "good bye"):
+            if path.name.lower() in ("close", "exit", "good bye", "0"):
                 return "\nGood bye!"
             elif path.exists():
                 print("|"+"_"*32 + "|"+"\n")
