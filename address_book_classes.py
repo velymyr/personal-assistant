@@ -230,19 +230,19 @@ class AddressBook(UserDict):
         if result:
             yield "\n".join(result)
 
-    # def serialize_to_csv(self, filename):
-    #     with open(filename, "w", newline="") as file:
-    #         writer = csv.writer(file)
-    #         print(self.data)
-    #         for rec in self.data.values():
-    #             print(rec)
-    #             name = rec.name.value
-    #             phones = [phone.value for phone in rec.phones]
-    #             birthday = rec.birthday.value.strftime(
-    #                 "%d/%m/%Y") if rec.birthday else ""
-    #             emailes = [email.value for email in rec.emailes]
-    #             writer.writerow(
-    #                 [name, ",".join(phones), birthday, ",".join(emailes)])
+    def serialize_to_csv(self, filename):
+        with open(filename, "w", newline="") as file:
+            writer = csv.writer(file)
+            print(self.data)
+            for rec in self.data.values():
+                print(rec)
+                name = rec.name.value
+                phones = [phone.value for phone in rec.phones]
+                birthday = rec.birthday.value.strftime(
+                    "%d/%m/%Y") if rec.birthday else ""
+                emailes = [email.value for email in rec.emailes]
+                writer.writerow(
+                    [name, ",".join(phones), birthday, ",".join(emailes)])
 
     def serialize_to_pickle(self, filename):
         with open(filename, "wb") as fh:
@@ -260,16 +260,16 @@ class AddressBook(UserDict):
     #     with open(filename, "w") as file:
     #         json.dump(data_list, file)
 
-    # def save(self):
-    #     with open('address_book.bin', 'wb') as file:
-    #         pickle.dump(self.data, file)
-    #     return 'OK'
+    def save(self):
+        with open('address_book.bin', 'wb') as file:
+            pickle.dump(self.data, file)
+        return 'OK'
 
-    # def load(self, file_name):
-    #     emptyness = os.stat(file_name + '.bin')
-    #     with open(file_name + '.bin', 'rb') as file:
-    #         self.data = pickle.load(file)
-    #     return self.data
+    def load(self, file_name):
+        emptyness = os.stat(file_name + '.bin')
+        with open(file_name + '.bin', 'rb') as file:
+            self.data = pickle.load(file)
+        return self.data
 
     def get_current_week(self):
         now = dt.now()
