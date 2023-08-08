@@ -22,7 +22,7 @@ def input_errors(func):
                 return error_message
             else:
                 error_message = str(e).split(' ')[1]
-                return f"Give me {error_message}"
+                return f"Wrong input"
     return wrapper
 
 
@@ -117,7 +117,7 @@ command_dict = {
     "0 or exit": [exit_book, 'to exit']
 }
 
-
+@input_errors
 def command_handler(user_input, command_dict):
     if user_input in command_dict:
         return command_dict[user_input][0]
