@@ -323,14 +323,17 @@ class AddressBook(UserDict):
         contacts_with_birthday = []
 
         for record in self.data.values():
-            if isinstance(record.birthday, str) and re.match('^\d{4}-\d{2}-\d{2}$', record.birthday):
-                date_object = dt.strptime(record.birthday, "%Y-%m-%d").date()
+            if isinstance(record.birthday, date):
+                date_object = record.birthday
             elif isinstance(record.birthday, Birthday):
                 date_object = record.birthday.value
             else:
-                continue
+                try:
+                    date_object = dt.strptime(record.birthday, "%Y-%m-%d").date()
+                except (ValueError, TypeError):
+                    continue
 
-            remaining_days_in_year = (date(date_object.year, 12, 31) - future_birthday).days
+            remaining_days_in_year = (date(current_date.year, 12, 31) - future_birthday).days
             if remaining_days_in_year > n_days:
                 birthday_this_year = date_object.replace(year=current_date.year)
                 if future_birthday == birthday_this_year:
@@ -344,29 +347,7 @@ class AddressBook(UserDict):
             return ', '.join(name for name in contacts_with_birthday)
         else:
             return f"Nobody has a birthday after {n_days} days"   
-    # def who_has_birthday_after_n_days(self, n_days):      
-    #     current_date = dt.now().date()
-    #     future_birthday = current_date + timedelta(days=n_days)
-    #     contacts_with_birthday = []
 
-    #     for record in self.data.values():
-    #         print(record.birthday)
-    #         if record.birthday is not None:
-    #             date_object = record.birthday
-    #             remaining_days_in_year = (date(date_object.year, 12, 31) - future_birthday).days
-    #             if remaining_days_in_year > n_days:
-    #                 birthday_this_year = date_object.replace(year=current_date.year)
-    #                 if future_birthday == birthday_this_year:
-    #                     contacts_with_birthday.append(record.name)
-    #             else: 
-    #                 birthday_next_year = date_object.replace(year=(current_date.year + 1))
-    #                 if future_birthday == birthday_next_year:
-    #                     contacts_with_birthday.append(record.name)
-
-    #     if contacts_with_birthday:
-    #         return ', '.join(name for name in contacts_with_birthday)
-    #     else:
-    #         return f"Nobody has birthday after {n_days} days"
 
     def show_all_address_book(self):
             console = Console()
