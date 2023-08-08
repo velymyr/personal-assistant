@@ -20,5 +20,9 @@ def normalize(name: str) -> str:
     return trans_name
 
 
+def test_normalize():
+    assert normalize("****Слава-Україні****") == "____Slava_Ukraini____"
+
+
 if __name__ == "__main__":
-    print(normalize("****Welcome****"))
+    test_normalize()
