@@ -10,7 +10,7 @@ import datetime
 import functools
 from rich.console import Console
 from rich.table import Table
-from main_work_drive import address_book, get_days_to_birthday
+from main_work_drive import address_book, get_days_to_birthday, edit
 from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
 filename = 'address_book'
 
@@ -43,9 +43,12 @@ def add(*args):
     return address_book.add_record(record)
 
 
-@input_errors
-def change():
-    ...
+# @input_errors
+def edit_contacts():
+    name = input('Contact name: ')
+    parameter = input('Which parameter to edit(name, phones, birthday, email, address, note): ').strip()
+    new_value = input("New Value: ")
+    return edit(name=name, parameter=parameter, new_value=new_value)
 
 
 # @input_errors
@@ -113,7 +116,7 @@ command_dict = {
     'bday': [get_days_to_birthday, 'to get day to birthday'],
     'blist': [who_has_b_after_n_days, 'to show bday boys after N days'],
     'remove': [remove_phone, 'to remove phone from contact'],
-    'change': [change, 'to change existing contact'],
+    'edit': [edit_contacts, 'to edit existing contact'],
     'delete': [delete_record, 'to delete existing contact'],
     'menu': [menu, 'to see list of commands'],
     "0 or exit": [exit_book, 'to exit']

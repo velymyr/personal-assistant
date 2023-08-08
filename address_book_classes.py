@@ -159,13 +159,15 @@ class Record:
                 self.phones.extend(phone)
             else:
                 self.phones.append(phone)
-
+    
+    
     def add_birthday(self, birthday: Birthday):
         if not self.birthday:
             self.birthday = birthday
             return f"birthday {self.birthday} add to contact {self.name}"
         return f"{self.birthday} allready present in birthday data of contact {self.name}"
 
+    
     def add_phone(self, phone: Phone):
         if phone.value.strip() not in [p.value.strip() for p in self.phones]:
             self.phones.append(phone)
@@ -228,46 +230,46 @@ class AddressBook(UserDict):
         if result:
             yield "\n".join(result)
 
-    def serialize_to_csv(self, filename):
-        with open(filename, "w", newline="") as file:
-            writer = csv.writer(file)
-            print(self.data)
-            for rec in self.data.values():
-                print(rec)
-                name = rec.name.value
-                phones = [phone.value for phone in rec.phones]
-                birthday = rec.birthday.value.strftime(
-                    "%d/%m/%Y") if rec.birthday else ""
-                emailes = [email.value for email in rec.emailes]
-                writer.writerow(
-                    [name, ",".join(phones), birthday, ",".join(emailes)])
+    # def serialize_to_csv(self, filename):
+    #     with open(filename, "w", newline="") as file:
+    #         writer = csv.writer(file)
+    #         print(self.data)
+    #         for rec in self.data.values():
+    #             print(rec)
+    #             name = rec.name.value
+    #             phones = [phone.value for phone in rec.phones]
+    #             birthday = rec.birthday.value.strftime(
+    #                 "%d/%m/%Y") if rec.birthday else ""
+    #             emailes = [email.value for email in rec.emailes]
+    #             writer.writerow(
+    #                 [name, ",".join(phones), birthday, ",".join(emailes)])
 
     def serialize_to_pickle(self, filename):
         with open(filename, "wb") as fh:
             pickle.dump(self.data, fh)
 
-    def serialize_to_json(self, filename):
-        data_list = []
-        for record in self.data.values():
-            data = {
-                "name": record.name.value,
-                "phones": [phone.value for phone in record.phones],
-                "birthday": record.birthday.value.strftime("%d/%m/%Y") if record.birthday else "",
-            }
-            data_list.append(data)
-        with open(filename, "w") as file:
-            json.dump(data_list, file)
+    # def serialize_to_json(self, filename):
+    #     data_list = []
+    #     for record in self.data.values():
+    #         data = {
+    #             "name": record.name.value,
+    #             "phones": [phone.value for phone in record.phones],
+    #             "birthday": record.birthday.value.strftime("%d/%m/%Y") if record.birthday else "",
+    #         }
+    #         data_list.append(data)
+    #     with open(filename, "w") as file:
+    #         json.dump(data_list, file)
 
-    def save(self):
-        with open('address_book.bin', 'wb') as file:
-            pickle.dump(self.data, file)
-        return 'OK'
+    # def save(self):
+    #     with open('address_book.bin', 'wb') as file:
+    #         pickle.dump(self.data, file)
+    #     return 'OK'
 
-    def load(self, file_name):
-        emptyness = os.stat(file_name + '.bin')
-        with open(file_name + '.bin', 'rb') as file:
-            self.data = pickle.load(file)
-        return self.data
+    # def load(self, file_name):
+    #     emptyness = os.stat(file_name + '.bin')
+    #     with open(file_name + '.bin', 'rb') as file:
+    #         self.data = pickle.load(file)
+    #     return self.data
 
     def get_current_week(self):
         now = dt.now()
@@ -303,7 +305,7 @@ class AddressBook(UserDict):
         return '_' * 60 + '\n' + '\n'.join(result) + '\n' + '_' * 60
     
 
-
+    
 
     def who_has_birthday_after_n_days(self, n_days):      
         current_date = dt.now()
@@ -321,7 +323,7 @@ class AddressBook(UserDict):
                 #print (remaining_days_in_year.days)
                 if remaining_days_in_year.days > n_days:
                     birthday_this_year = rec.birthday.replace(year=current_year)
-                    #print (birthday_this_year)
+                    print (birthday_this_year)
                     if future_birthday.date() == birthday_this_year:
                         contacts_with_birthday.append(rec.name)
                 else: 

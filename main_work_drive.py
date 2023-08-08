@@ -27,46 +27,46 @@ def input_error(func):
     return wrapper
 
 
-@input_error
-def add_contact(*args):
-    bd = None
-    name = Name(args[0])
-    list_phones = []
-    list_emails = []
-    rec: Record = address_book.get(str(name))
-    if rec:
-        for i in range(1, len(args)):
-            print(args[i])
-            if not rec.birthday:
-                bd = check_bd(args[i])
-                if bd:
-                    return rec.add_birthday(bd)
-            if check_phone(args[i]):
-                # if phone:
-                list_phones.append(rec.add_phone(args[i]))
-                return list_phones
-            if check_email(args[i]):
-                # if email:
-                list_emails.append(rec.add_email(args[i]))
-                return list_emails
-        # else:
-        #     return "Unknown command"
-    if not rec:
-        for i in range(1, len(args)):
-            bd = check_bd(args[i])
-            birthday = bd
-            if check_phone(args[i]):
-                # if phone:
-                list_phones.append(args[i])
+# @input_error
+# def add_contact(*args):
+#     bd = None
+#     name = Name(args[0])
+#     list_phones = []
+#     list_emails = []
+#     rec: Record = address_book.get(str(name))
+#     if rec:
+#         for i in range(1, len(args)):
+#             print(args[i])
+#             if not rec.birthday:
+#                 bd = check_bd(args[i])
+#                 if bd:
+#                     return rec.add_birthday(bd)
+#             if check_phone(args[i]):
+#                 # if phone:
+#                 list_phones.append(rec.add_phone(args[i]))
+#                 return list_phones
+#             if check_email(args[i]):
+#                 # if email:
+#                 list_emails.append(rec.add_email(args[i]))
+#                 return list_emails
+#         # else:
+#         #     return "Unknown command"
+#     if not rec:
+#         for i in range(1, len(args)):
+#             bd = check_bd(args[i])
+#             birthday = bd
+#             if check_phone(args[i]):
+#                 # if phone:
+#                 list_phones.append(args[i])
 
-            if check_email(args[i]):
-                list_emails.append(args[i])
+#             if check_email(args[i]):
+#                 list_emails.append(args[i])
 
-        rec = Record(name, phone=list_phones,
-                     birthday=birthday, email=list_emails)
-        return address_book.add_record(rec)
-    else:
-        return "Unknown command"
+#         rec = Record(name, phone=list_phones,
+#                      birthday=birthday, email=list_emails)
+#         return address_book.add_record(rec)
+#     else:
+#         return "Unknown command"
 
 
 @input_error
@@ -109,6 +109,40 @@ def check_phone(args):
     return phone
 
 # Видалити запис
+
+#@input_error
+
+def edit(name, parameter, new_value):
+    res: Record = address_book.get(str(name))
+    print(res)
+    try:
+        if res:
+            if parameter == 'birthday':
+                new_value = Birthday(new_value).value
+            elif parameter == 'email':
+                new_value = Email(new_value).value
+            elif parameter == 'address':
+                new_value = Address(new_value).value
+            elif parameter == 'note':
+                new_value = Note(new_value).value
+            elif parameter == 'phones':
+                new_contact = new_value.split(' ')
+                new_value = []
+                for number in new_contact:
+                        new_value.append(Phone(number).value)
+            if parameter in res.__dict__.keys():
+                res.__dict__[parameter] = new_value
+            # if parameter in :
+            #     rec[parameter] = new_value
+            # else:
+            #     raise ValueError
+        # if name not in res:
+        #raise NameError
+    except ValueError:
+        print('Incorrect parameter! Please provide correct parameter')
+    except NameError:
+        print('There is no such contact in address book!')
+    
 
 
 @input_error
