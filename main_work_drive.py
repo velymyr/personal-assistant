@@ -12,23 +12,18 @@ def input_error(func):
     def wrapper(*args, **kwargs):
         try:
             return func(*args, **kwargs)
-        except NameError as e:
-            print(
-                f"Give me a name and phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
-        except IndexError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
-        except TypeError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
-        except UnboundLocalError as e:
+        except NameError:
+            print("Give me a name and phone number in format +12dig or date birthday dd/mm/YYYY")
+        except IndexError:
+            print("Give me a name and phone number in format +12dig or date birthday dd/mm/YYYY")
+        except TypeError:
+            print("Give me a name and phone number in format +12dig or date birthday dd/mm/YYYY")
+        except UnboundLocalError:
             print("Contact exists")
-        except ValueError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
-        except AttributeError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
+        except ValueError:
+            print("Give me a name and phone number in format +12dig or date birthday dd/mm/YYYY")
+        except AttributeError:
+            print("Give me a name and phone number in format +12dig or date birthday dd/mm/YYYY")
     return wrapper
 
 

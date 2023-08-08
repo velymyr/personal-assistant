@@ -296,12 +296,6 @@ class AddressBook(UserDict):
 
 
 
-
-
-
-
-
-    
     def who_has_birthday_after_n_days(self, n_days):      
         current_date = dt.now().date()
         future_birthday = current_date + timedelta(days=n_days)
