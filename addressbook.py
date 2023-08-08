@@ -1,9 +1,4 @@
-### Заглушка на адресбук###
-# from guesser import main
 
-
-# def addressbook_starter():
-#     main()
 import difflib
 import inspect
 import functools
@@ -45,16 +40,6 @@ def add(*args):
 @input_errors
 def change():
     ...
-
-
-# @input_errors
-# def save(*args):
-#     #filename= filename
-#     return address_book.save_address_book()
-
-# @input_errors
-# def load(*args):
-#     return address_book.load_address_book()
 
 
 @input_errors
@@ -160,14 +145,15 @@ def addressbook_starter():
     filename = "address_book"
     try:
         address_book.load(filename)
-        print("Address book loaded from file.")
+        print(" Address book loaded from file.")
     except FileNotFoundError:
         print("New address book created.")
         
-    print("/n***Hello I`m a contact book.***\n")
+    print("\n ***Hello I`m a contact book.***\n")
+    print("_"*50)
+    print(address_book.congratulate())
     instruction(command_dict)
     
-    # print(address_book.congratulate())
     while True:
         user_input = input('Input a command\n>>>').lower()
         # input 'menu' to show all funcs
