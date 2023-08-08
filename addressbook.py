@@ -121,7 +121,7 @@ command_dict = {
     'show all': [show_all_address_book, 'to show all contacts'],
     'save': [address_book.save, 'to save address book'],
     'bday': [get_days_to_birthday, 'to get day to birthday'],
-    'blist': [who_has_bd_n_days, 'to show bday boys during N days'],
+    'blist': [who_has_bd_n_days, 'to show birthday during next N days'],
     'remove': [remove_phone, 'to remove phone from contact'],
     'change': [change, 'to change existing contact'],
     'delete': [delete_record, 'to delete existing contact'],
