@@ -238,7 +238,7 @@ def search():
         search()
 
 
-def menu():
+def help():
     pass
 
 
@@ -248,7 +248,7 @@ note_commands = {
     "edit": [change_note, 'to edit note'],
     "search": [search, 'to search note'],
     "show all": [show_notes, 'to output all notes'],
-    'menu': [menu, 'to see list of commands'],
+    'help': [help, 'to see list of commands'],
     "0 or exit": [exit_notes, 'to exit']
 }
 
@@ -290,7 +290,7 @@ def notes_main():
     while True:
         user_input_command = str(input("\nInput a command:\n>>>"))
         command = pars(user_input_command.lower(), note_commands)
-        if user_input_command == 'menu':
+        if user_input_command == 'help':
             instruction(note_commands)
         elif user_input_command in ("exit", "0"):
             nb.save()

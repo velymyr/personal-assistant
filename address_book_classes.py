@@ -38,7 +38,7 @@ class Phone(Field):
                 self.values = value
             else:
                 self.values = input(
-                    "Phones(+12digits) (Введіть номер телефона + і дванадцять цифр): ")
+                    'Введіть номер телефону, 12 цифр зі знаком "+" попереду:' )
             try:
                 for number in self.values.split(' '):
                     if re.match('^\+\d{12}$', number) or number == '':

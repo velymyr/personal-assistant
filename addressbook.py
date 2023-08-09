@@ -149,7 +149,7 @@ def exit_book():
     pass
 
 
-def menu():
+def help():
     pass
 
 
@@ -165,7 +165,7 @@ command_dict = {
     'edit': [edit_contacts, 'to edit existing contact'],
     'delete': [delete_record, 'to delete existing contact'],
     'search': [search, 'search contact by any match'],
-    'menu': [menu, 'to see list of commands'],
+    'help': [help, 'to see list of commands'],
     "0 or exit": [exit_book, 'to exit']
 }
 
@@ -222,7 +222,7 @@ def addressbook_starter():
 
     while True:
         user_input = input('Input a command\n>>>').lower()
-        if user_input == 'menu':
+        if user_input == 'help':
             instruction(command_dict)
         elif user_input in ("exit", "0"):
             print('Contact book closed')
