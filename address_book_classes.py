@@ -5,6 +5,8 @@ import json
 import os
 import pickle
 import re
+from datetime import datetime as dt
+from datetime import date, timedelta
 from rich.console import Console
 from rich.table import Table
 
@@ -26,7 +28,24 @@ class Field:
 class Name(Field):
 
     def __init__(self, value):
-        self.value = value
+        while True:
+            self.value = value
+            if self.value:
+                self.values = value
+                break
+            else:
+                print('Incorrect name')
+                value = input("Name: ")
+
+            # try:
+            # #     for number in self.values.split(' '):
+            # #         if re.match('^\+\d{12}$', number) or number == '':
+            # #             self.value.append(number)
+            # #         else:
+            # #             raise ValueError
+            # except ValueError:
+
+            # else:
 
 
 class Phone(Field):
@@ -159,13 +178,15 @@ class Record:
                 self.phones.extend(phone)
             else:
                 self.phones.append(phone)
-
+    
+    
     def add_birthday(self, birthday: Birthday):
         if not self.birthday:
             self.birthday = birthday
             return f"birthday {self.birthday} add to contact {self.name}"
         return f"{self.birthday} allready present in birthday data of contact {self.name}"
 
+    
     def add_phone(self, phone: Phone):
         if phone.value.strip() not in [p.value.strip() for p in self.phones]:
             self.phones.append(phone)
@@ -254,31 +275,39 @@ class AddressBook(UserDict):
         if result:
             yield "\n".join(result)
 
-    def serialize_to_csv(self, filename):
+    def serialize_to_csv(self):
+        filename='address_book.csv'
         with open(filename, "w", newline="") as file:
             writer = csv.writer(file)
             print(self.data)
             for rec in self.data.values():
                 print(rec)
-                name = rec.name.value
-                phones = [phone.value for phone in rec.phones]
-                birthday = rec.birthday.value.strftime(
+                name = rec.name
+                phones = [phone for phone in rec.phones]
+                birthday = rec.birthday.strftime(
                     "%d/%m/%Y") if rec.birthday else ""
-                emailes = [email.value for email in rec.emailes]
+                emailes = [email for email in rec.emailes]
+                address = rec.address
+                note = rec.note
                 writer.writerow(
-                    [name, ",".join(phones), birthday, ",".join(emailes)])
+                    [name, ",".join(phones), birthday, ",".join(emailes), address, note])
+        return "csv"
 
-    def serialize_to_pickle(self, filename):
-        with open(filename, "wb") as fh:
-            pickle.dump(self.data, fh)
+    # def serialize_to_pickle(self, filename):
+    #     with open(filename, "wb") as fh:
+    #         pickle.dump(self.data, fh)
 
-    def serialize_to_json(self, filename):
+    def serialize_to_json(self):
+        filename='address_book.json'
         data_list = []
         for record in self.data.values():
             data = {
-                "name": record.name.value,
-                "phones": [phone.value for phone in record.phones],
-                "birthday": record.birthday.value.strftime("%d/%m/%Y") if record.birthday else "",
+                "name": record.name,
+                "phones": [phone for phone in record.phones],
+                "birthday": record.birthday.strftime("%d/%m/%Y") if record.birthday else "",
+                "emailes": [email for email in record.emailes],
+                "address": record.address,
+                "note": record.note
             }
             data_list.append(data)
         with open(filename, "w") as file:
@@ -290,10 +319,20 @@ class AddressBook(UserDict):
         return 'OK'
 
     def load(self, file_name):
-        emptyness = os.stat(file_name + '.bin')
-        with open(file_name + '.bin', 'rb') as file:
+        #emptyness = os.stat(file_name + '.bin')
+        with open(file_name, 'rb') as file:
             self.data = pickle.load(file)
         return self.data
+
+    def get_current_week(self):
+        now = dt.now()
+        current_weekday = now.weekday()
+        if current_weekday < 5:
+            week_start = now - timedelta(days=2 + current_weekday)
+        else:
+            week_start = now - timedelta(days=current_weekday - 5)
+        return [week_start.date(), week_start.date() + timedelta(days=7)]
+
 
     def congratulate(self):
         result = []
@@ -302,10 +341,10 @@ class AddressBook(UserDict):
         current_year = datetime.now().year
         congratulate = {'Monday': [], 'Tuesday': [],
                         'Wednesday': [], 'Thursday': [], 'Friday': []}
-        for account in self.keys():
-
-            if self[account].birthday:
-                new_birthday = self[account].birthday.replace(
+        for account in self.data:
+            print(account)
+            if account[self.birthday]:
+                new_birthday = account[self.birthday].replace(
                     year=current_year)
                 birthday_weekday = new_birthday.weekday()
                 next_week = (datetime.now() + timedelta(days=7)).date()
@@ -317,8 +356,40 @@ class AddressBook(UserDict):
                         congratulate['Monday'].append(self[account].name)
         for key, value in congratulate.items():
             if len(value):
-                result.append(f"{key}: {', '.join(value)}")
-        return '! Do not forget to congratulate !\n'+'_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
+                result.append(f"Don't forget to Say Happy Birthday in {key} to {' '.join(value)}")
+        return '_' * 60 + '\n' + '\n'.join(result) + '\n' + '_' * 60
+    
+
+    
+
+    def who_has_birthday_after_n_days(self, n_days):      
+        current_date = dt.now()
+        current_year = dt.now().year
+        future_birthday = current_date + timedelta(days=n_days)
+        #print (future_birthday.date())
+        contacts_with_birthday = []
+
+        for rec in self.data.values():
+            #print (rec)
+            if rec.birthday is not None:
+                new_year= date(current_year,12,31)
+                #print(new_year)
+                remaining_days_in_year = new_year - future_birthday.date()
+                #print (remaining_days_in_year.days)
+                if remaining_days_in_year.days > n_days:
+                    birthday_this_year = rec.birthday.replace(year=current_year)
+                    #print (birthday_this_year)
+                    if future_birthday.date() == birthday_this_year:
+                        contacts_with_birthday.append(rec.name)
+                else: 
+                    birthday_next_year = rec.birthday.replace(year=(current_year + 1))
+                    if future_birthday.date() == birthday_next_year:
+                        contacts_with_birthday.append(rec.name)
+
+        if contacts_with_birthday:
+            return ', '.join(name for name in contacts_with_birthday)
+        else:
+            return f"Nobody has birthday after {n_days} days"
 
     def show_all_address_book(self):
         console = Console()
