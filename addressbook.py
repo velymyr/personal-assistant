@@ -4,7 +4,7 @@ import datetime
 import functools
 from rich.console import Console
 from rich.table import Table
-from main_work_drive import address_book, get_days_to_birthday, edit
+from main_work_drive import address_book, edit
 from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
 from datetime import date, timedelta, datetime
 
@@ -82,15 +82,18 @@ def show_all_address_book():
         return address_book.show_all_address_book()
 
 
-# def get_days_to_birthday(*args):
-#     name = Name(input("Name: ")).value.strip()
-#     res: Record = address_book.get(str(name))
-#     result = res.days_to_birthday(res.birthday)
-#     if result == 0:
-#         return f'{name } tomorrow birthday'
-#     if result == 365:
-#         return f'{name} today is birthday'
-#     return f'{name} until the next birthday left {result} days'
+def get_days_to_birthday(*args):
+    name = Name(input("Name: ")).value.strip()
+    if name in address_book:
+        res: Record = address_book.get(str(name))
+        result = res.days_to_birthday(res.birthday)
+        if result == 0:
+            return f'{name } tomorrow birthday'
+        if result == 365:
+            return f'{name} today is birthday'
+        return f'{name} until the next birthday left {result} days'
+    else:
+        return f'Contact with name "{name}" does not exist'
 
 
 def who_has_bd_n_days():
@@ -127,7 +130,7 @@ command_dict = {
     "0 or exit": [exit_book, 'to exit']
 }
 
-
+@input_errors
 def command_handler(user_input, command_dict):
     if user_input in command_dict:
         return command_dict[user_input][0]

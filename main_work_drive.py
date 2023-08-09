@@ -120,16 +120,16 @@ def delete_record(*args):
 
 
 # коли день народження
-@input_error
-def get_days_to_birthday(*args):
-    name = Name(args[0])
-    res: Record = address_book.get(str(name))
-    result = res.days_to_birthday(res.birthday)
-    if result == 0:
-        return f'{name } tomorrow birthday'
-    if result == 365:
-        return f'{name} today is birthday'
-    return f'{name} until the next birthday left {result} days'
+# @input_error
+# def get_days_to_birthday(*args):
+#     name = Name(args[0])
+#     res: Record = address_book.get(str(name))
+#     result = res.days_to_birthday(res.birthday)
+#     if result == 0:
+#         return f'{name } tomorrow birthday'
+#     if result == 365:
+#         return f'{name} today is birthday'
+#     return f'{name} until the next birthday left {result} days'
 
 # показати контакт
 @input_error
