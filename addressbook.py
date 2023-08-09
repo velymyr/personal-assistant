@@ -1,15 +1,13 @@
 import difflib
-import inspect
 import datetime
 import functools
 from rich.console import Console
 from rich.table import Table
-from main_work_drive import address_book, edit
 from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
 from datetime import date, timedelta, datetime
 
 
-#address_book = AddressBook()
+address_book = AddressBook()
 filename = 'address_book'
 
 
@@ -44,12 +42,40 @@ def add(*args):
     return address_book.add_record(record)
 
 
-# @input_errors
-def edit_contacts():
+@input_errors
+def edit_contacts(*args):
     name = input('Contact name: ')
     parameter = input('Which parameter to edit(name, phones, birthday, email, address, note): ').strip()
     new_value = input("New Value: ")
-    return edit(name=name, parameter=parameter, new_value=new_value)
+    res: Record = address_book.get(str(name))
+
+    try:
+        if res:
+            if parameter == 'birthday':
+                new_value = Birthday(new_value).value
+            elif parameter == 'email':
+                parameter= 'emailes'
+                new_contact = new_value.split(' ')
+                new_value = []
+                for emailes in new_contact:
+                        new_value.append(Email(emailes).value)
+            elif parameter == 'address':
+                new_value = Address(new_value).value
+            elif parameter == 'note':
+                new_value = Note(new_value).value
+            elif parameter == 'phones':
+                new_contact = new_value.split(' ')
+                new_value = []
+                for number in new_contact:
+                        new_value.append(Phone(number).value)
+            if parameter in res.__dict__.keys():
+                res.__dict__[parameter] = new_value
+        res: Record = address_book.get(str(name))
+        print(res)   
+    except ValueError:
+        print('Incorrect parameter! Please provide correct parameter')
+    except NameError:
+        print('There is no such contact in address book!')
 
 
 @input_errors
@@ -102,8 +128,20 @@ def who_has_bd_n_days():
         n_days = int(days)
     except TypeError:
         return 'This is not a number. Give me a number of days.'
-    
-    return address_book.who_has_birthday_after_n_days(n_days)
+    result = []
+    result_dict = AddressBook()
+    current_year = datetime.now().year
+
+    for account in address_book.data.values():
+        if account.birthday:
+            new_birthday = account.birthday.replace(year=current_year)
+            next_date = (datetime.now() + timedelta(days=n_days)).date()
+            if date.today() <= new_birthday < next_date:
+                result.append(account)
+    for item in result:
+        result_dict[item.name] = item
+
+    return result_dict.show_all_address_book()
 
 
 def exit_book():
@@ -129,6 +167,7 @@ command_dict = {
     'menu': [menu, 'to see list of commands'],
     "0 or exit": [exit_book, 'to exit']
 }
+
 
 @input_errors
 def command_handler(user_input, command_dict):
