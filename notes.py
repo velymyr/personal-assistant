@@ -135,7 +135,7 @@ class NoteBook(UserDict):
         table.add_column("Tags")
 
         for obj in found_fields:
-            str_tags = ", ".join(obj[1])  # Об'єднати теги в один рядок
+            str_tags = ", ".join(obj[1])
             table.add_row(str(obj[0]), str_tags)
 
         if found_fields:
