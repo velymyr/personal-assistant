@@ -320,41 +320,6 @@ class AddressBook(UserDict):
                 result.append(f"{key}: {', '.join(value)}")
         return '! Do not forget to congratulate !\n'+'_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
 
-    def who_has_birthday_after_n_days(self, n_days):
-        current_date = datetime.now().date()
-        future_birthday = current_date + timedelta(days=n_days)
-        contacts_with_birthday = []
-
-        for record in self.data.values():
-            if isinstance(record.birthday, date):
-                date_object = record.birthday
-            elif isinstance(record.birthday, Birthday):
-                date_object = record.birthday.value
-            else:
-                try:
-                    date_object = dt.strptime(
-                        record.birthday, "%Y-%m-%d").date()
-                except (ValueError, TypeError):
-                    continue
-
-            remaining_days_in_year = (
-                date(current_date.year, 12, 31) - future_birthday).days
-            if remaining_days_in_year > n_days:
-                birthday_this_year = date_object.replace(
-                    year=current_date.year)
-                if future_birthday == birthday_this_year:
-                    contacts_with_birthday.append(record.name)
-            else:
-                birthday_next_year = date_object.replace(
-                    year=(current_date.year + 1))
-                if future_birthday == birthday_next_year:
-                    contacts_with_birthday.append(record.name)
-
-        if contacts_with_birthday:
-            return ', '.join(name for name in contacts_with_birthday)
-        else:
-            return f"Nobody has a birthday after {n_days} days"
-
     def show_all_address_book(self):
         console = Console()
         table = Table(show_header=True, header_style="bold magenta",
@@ -378,7 +343,7 @@ class AddressBook(UserDict):
 
         console.print(table)
         return "Success!\n"
-
+    
     def search(self, string: str):
         output = ''
         for key in self.keys():
@@ -388,7 +353,7 @@ class AddressBook(UserDict):
             if rec.birthday == "":
                 show_birthday = ""
             else:
-                show_birthday = dt.strftime(rec.birthday, '%d/%m/%Y')
+                show_birthday = datetime.strftime(rec.birthday, '%d/%m/%Y')
 
             emailes = ".".join(email for email in rec.emailes)
             address = rec.address
