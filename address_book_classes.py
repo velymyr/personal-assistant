@@ -244,11 +244,11 @@ class AddressBook(UserDict):
             print(self.data)
             for rec in self.data.values():
                 print(rec)
-                name = rec.name.value
-                phones = [phone.value for phone in rec.phones]
-                birthday = rec.birthday.value.strftime(
+                name = rec.name
+                phones = [phone for phone in rec.phones]
+                birthday = rec.birthday.strftime(
                     "%d/%m/%Y") if rec.birthday else ""
-                emailes = [email.value for email in rec.emailes]
+                emailes = [email for email in rec.emailes]
                 address = rec.address
                 note = rec.note
                 writer.writerow(
