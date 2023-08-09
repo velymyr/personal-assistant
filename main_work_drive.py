@@ -1,7 +1,6 @@
 from datetime import datetime
-from address_book_classes import AddressBook, Name, Phone, Record, Birthday, Email, Address, Note
+from address_book_classes import AddressBook, Name, Phone, Record, Birthday, Email
 import re
-
 
 address_book = AddressBook()
 filename = 'address_book'
@@ -24,6 +23,7 @@ def input_error(func):
             print(error_mgs)
         except AttributeError as e:
             print(error_mgs)
+
     return wrapper
 
 
@@ -42,21 +42,16 @@ def add_contact(*args):
                 if bd:
                     return rec.add_birthday(bd)
             if check_phone(args[i]):
-                # if phone:
                 list_phones.append(rec.add_phone(args[i]))
                 return list_phones
             if check_email(args[i]):
-                # if email:
                 list_emails.append(rec.add_email(args[i]))
                 return list_emails
-        # else:
-        #     return "Unknown command"
     if not rec:
         for i in range(1, len(args)):
             bd = check_bd(args[i])
             birthday = bd
             if check_phone(args[i]):
-                # if phone:
                 list_phones.append(args[i])
 
             if check_email(args[i]):
@@ -93,7 +88,7 @@ def check_bd(args):
 
 def check_email(args):
     pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-    if re.match (pattern, args):
+    if re.match(pattern, args):
         email = Email(args)
     print(email)
     return email
