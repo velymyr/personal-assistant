@@ -4,7 +4,7 @@ import datetime
 import functools
 from rich.console import Console
 from rich.table import Table
-from main_work_drive import address_book, get_days_to_birthday
+from main_work_drive import address_book, get_days_to_birthday, edit
 from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
 from datetime import date, timedelta, datetime
 
