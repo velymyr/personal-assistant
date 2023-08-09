@@ -6,10 +6,9 @@ from datetime import date, timedelta
 from rich.console import Console
 from rich.table import Table
 import csv
-#import json
+import json
 import pickle
 import os
-# filename= 'address_book_1.txt'
 
 
 class Field:
@@ -259,17 +258,21 @@ class AddressBook(UserDict):
         with open(filename, "wb") as fh:
             pickle.dump(self.data, fh)
 
-    # def serialize_to_json(self, filename):
-    #     data_list = []
-    #     for record in self.data.values():
-    #         data = {
-    #             "name": record.name.value,
-    #             "phones": [phone.value for phone in record.phones],
-    #             "birthday": record.birthday.value.strftime("%d/%m/%Y") if record.birthday else "",
-    #         }
-    #         data_list.append(data)
-    #     with open(filename, "w") as file:
-    #         json.dump(data_list, file)
+    def serialize_to_json(self):
+        filename='address_book.json'
+        data_list = []
+        for record in self.data.values():
+            data = {
+                "name": record.name,
+                "phones": [phone for phone in record.phones],
+                "birthday": record.birthday.strftime("%d/%m/%Y") if record.birthday else "",
+                "emailes": [email for email in record.emailes],
+                "address": record.address,
+                "note": record.note
+            }
+            data_list.append(data)
+        with open(filename, "w") as file:
+            json.dump(data_list, file)
 
     def save(self):
         with open('address_book.bin', 'wb') as file:
