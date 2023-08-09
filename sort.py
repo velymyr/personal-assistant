@@ -7,7 +7,7 @@ from normalize import normalize
 CATEGORIES = {"Audio": [".mp3", ".aiff", ".wav", ".ogg"],
               "Video": [".mkv", ".mov", ".mp4", ".avi"],
               "Document": [".docx", ".pptx", ".doc", ".txt", ".pdf", ".xlsx", ".pptx", ".rtf", ".xls", ".pub"],
-              "Image": [".jpeg", ".png", ".svg", ".jpg", ".bmp", ".gif", ".bmp"],
+              "Image": [".jpeg", ".png", ".svg", ".jpg", ".bmp", ".gif"],
               "Archive": [".zip", ".tar", ".7z", ".gz"],
               "Python": [".py", ".json", ".pyc"],
               "Other": [] }
