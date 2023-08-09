@@ -1,8 +1,6 @@
 from datetime import datetime
-from address_book_classes import AddressBook, Name, Phone, Record, Birthday, Email, Address, Note
+from address_book_classes import AddressBook, Name, Phone, Record, Birthday, Email
 import re
-import pickle
-
 
 address_book = AddressBook()
 filename = 'address_book'
@@ -10,25 +8,22 @@ filename = 'address_book'
 
 def input_error(func):
     def wrapper(*args, **kwargs):
+        error_mgs = 'Give me a name and phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY'
         try:
             return func(*args, **kwargs)
-        except NameError as e:
-            print(
-                f"Give me a name and phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
-        except IndexError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
-        except TypeError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
         except UnboundLocalError as e:
             print("Contact exists")
+        except NameError as e:
+            print(error_mgs)
+        except IndexError as e:
+            print(error_mgs)
+        except TypeError as e:
+            print(error_mgs)
         except ValueError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
+            print(error_mgs)
         except AttributeError as e:
-            print(
-                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
+            print(error_mgs)
+
     return wrapper
 
 
@@ -47,21 +42,16 @@ def add_contact(*args):
                 if bd:
                     return rec.add_birthday(bd)
             if check_phone(args[i]):
-                # if phone:
                 list_phones.append(rec.add_phone(args[i]))
                 return list_phones
             if check_email(args[i]):
-                # if email:
                 list_emails.append(rec.add_email(args[i]))
                 return list_emails
-        # else:
-        #     return "Unknown command"
     if not rec:
         for i in range(1, len(args)):
             bd = check_bd(args[i])
             birthday = bd
             if check_phone(args[i]):
-                # if phone:
                 list_phones.append(args[i])
 
             if check_email(args[i]):
@@ -97,8 +87,8 @@ def check_bd(args):
 
 
 def check_email(args):
-    pattern = "^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$"
-    if re.match (pattern, args):
+    pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+    if re.match(pattern, args):
         email = Email(args)
     print(email)
     return email
