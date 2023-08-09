@@ -175,11 +175,8 @@ def addressbook_starter():
     print("\n ***Hello I`m a contact book.***\n")
     print("_"*59)
     print(address_book.congratulate())
-
     instruction(command_dict)
-    print(address_book.congratulate())
     
-    # print(address_book.congratulate())
     while True:
         user_input = input('Input a command\n>>>').lower()
         if user_input == 'menu':
