@@ -8,8 +8,6 @@ import re
 from rich.console import Console
 from rich.table import Table
 
-from bd import main_bd
-
 
 class Field:
 
@@ -186,7 +184,12 @@ class Record:
         return f"{old_phone} not present in phones of contact {self.name}"
 
     def days_to_birthday(self, birthday: Birthday):
-        result = main_bd(birthday)
+        str_date = str(birthday)
+        now = datetime.datetime.now()
+        then = datetime.datetime.strptime(str_date, "%Y-%m-%d")
+        delta1 = datetime.datetime(now.year, then.month, then.day)
+        delta2 = datetime.datetime(now.year+1, then.month, then.day)
+        result = ((delta1 if delta1 >= now else delta2) - now).days
         return result
 
     def get_phones(self, res):
