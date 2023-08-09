@@ -9,7 +9,7 @@ from address_book_classes import Record, Name, Phone, Birthday, Email, Address, 
 from datetime import date, timedelta, datetime
 
 
-address_book = AddressBook()
+#address_book = AddressBook()
 filename = 'address_book'
 
 
@@ -60,7 +60,6 @@ def delete_record(*args):
 
 @input_errors
 def remove_phone(*args):
-
     name = Name(input("Name: ")).value.strip()
     phone = Phone(input("Phone: "))
     rec: Record = address_book.get(str(name))
@@ -80,15 +79,15 @@ def show_all_address_book():
         return address_book.show_all_address_book()
 
 
-def get_days_to_birthday(*args):
-    name = Name(input("Name: ")).value.strip()
-    res: Record = address_book.get(str(name))
-    result = res.days_to_birthday(res.birthday)
-    if result == 0:
-        return f'{name } tomorrow birthday'
-    if result == 365:
-        return f'{name} today is birthday'
-    return f'{name} until the next birthday left {result} days'
+# def get_days_to_birthday(*args):
+#     name = Name(input("Name: ")).value.strip()
+#     res: Record = address_book.get(str(name))
+#     result = res.days_to_birthday(res.birthday)
+#     if result == 0:
+#         return f'{name } tomorrow birthday'
+#     if result == 365:
+#         return f'{name} today is birthday'
+#     return f'{name} until the next birthday left {result} days'
 
 
 def who_has_bd_n_days():
@@ -166,12 +165,13 @@ def addressbook_starter():
     filename = "address_book.bin"
     try:
         address_book.load(filename)
-        print(" Address book loaded from file.")
+        print("Address book loaded from file.")
     except FileNotFoundError:
         print("New address book created.")
-        
-    print("/n***Hello I`m a contact book.***\n")
+    print("***Hello I`m a contact book.***")
+    print("_"*60)
     instruction(command_dict)
+    print(address_book.congratulate())
     
     # print(address_book.congratulate())
     while True:

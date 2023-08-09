@@ -9,7 +9,6 @@ from datetime import datetime as dt
 from datetime import date, timedelta
 from rich.console import Console
 from rich.table import Table
-
 from bd import main_bd
 
 
@@ -37,16 +36,7 @@ class Name(Field):
                 print('Incorrect name')
                 value = input("Name: ")
 
-            # try:
-            # #     for number in self.values.split(' '):
-            # #         if re.match('^\+\d{12}$', number) or number == '':
-            # #             self.value.append(number)
-            # #         else:
-            # #             raise ValueError
-            # except ValueError:
-
-            # else:
-
+            
 
 class Phone(Field):
 
@@ -239,7 +229,6 @@ class Record:
         console.print(table)
         return ""
 
-        # return f": {self.name} | {', '.join(p for p in self.phones)} | {(str(self.birthday))} | {', '.join(p for p in self.emailes)} | {(str(self.address))} | {(str(self.note))} |"
 
     def remove_phone(self, phone):
         for idx, p in enumerate(self.phones):
@@ -293,9 +282,6 @@ class AddressBook(UserDict):
                     [name, ",".join(phones), birthday, ",".join(emailes), address, note])
         return "csv"
 
-    # def serialize_to_pickle(self, filename):
-    #     with open(filename, "wb") as fh:
-    #         pickle.dump(self.data, fh)
 
     def serialize_to_json(self):
         filename='address_book.json'
@@ -319,7 +305,6 @@ class AddressBook(UserDict):
         return 'OK'
 
     def load(self, file_name):
-        #emptyness = os.stat(file_name + '.bin')
         with open(file_name, 'rb') as file:
             self.data = pickle.load(file)
         return self.data
@@ -338,27 +323,24 @@ class AddressBook(UserDict):
         result = []
         WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Sunday']
-        current_year = datetime.now().year
+        current_year = dt.now().year
         congratulate = {'Monday': [], 'Tuesday': [],
                         'Wednesday': [], 'Thursday': [], 'Friday': []}
-        for account in self.data:
-            print(account)
-            if account[self.birthday]:
-                new_birthday = account[self.birthday].replace(
-                    year=current_year)
+        for rec in self.data.values():
+            #print(rec.birthday)
+            if rec.birthday is not None:
+                new_birthday = rec.birthday.replace(year=current_year)
+                #print(new_birthday)
                 birthday_weekday = new_birthday.weekday()
-                next_week = (datetime.now() + timedelta(days=7)).date()
-                if date.today() <= new_birthday < next_week:
+                if self.get_current_week()[0] <= new_birthday < self.get_current_week()[1]:
                     if birthday_weekday < 5:
-                        congratulate[WEEKDAYS[birthday_weekday]].append(
-                            self[account].name)
+                        congratulate[WEEKDAYS[birthday_weekday]].append(rec.name)
                     else:
-                        congratulate['Monday'].append(self[account].name)
+                        congratulate['Monday'].append(rec.name)
         for key, value in congratulate.items():
             if len(value):
                 result.append(f"Don't forget to Say Happy Birthday in {key} to {' '.join(value)}")
         return '_' * 60 + '\n' + '\n'.join(result) + '\n' + '_' * 60
-    
 
     
 
