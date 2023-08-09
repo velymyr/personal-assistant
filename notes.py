@@ -99,21 +99,21 @@ class NoteBook(UserDict):
         print("\n***Edit func***")
         self.show_notes()
 
-        x = input("***Notebook says***\nChoose the note you want to edit by number ('0' - to exit delete func):\n>>> ")
+        x = input("\nChoose the note you want to edit by number ('0' - to exit delete func):\n>>> ")
 
         try:
             x = int(x)
             keys = list(self.data.keys())
             if 1 <= x <= len(keys):
                 note_to_edit = keys[x - 1]
-                new_note = input(f"***Notebook says***\nEnter the new content for note '{note_to_edit}': ")
+                new_note = input(f"\nEnter the new content for note '{note_to_edit}': ")
                 new_tags = input(
-                    f"***Notebook says***\nEnter the new tags for note '{note_to_edit}' (comma-separated): ").split(",")
+                    f"\nEnter the new tags for note '{note_to_edit}' (comma-separated): ").split(",")
 
                 self.data[new_note] = [tag.strip() for tag in new_tags]
                 if note_to_edit != new_note:
                     del self.data[note_to_edit]
-                print(f"***Notebook says***\nNote '{note_to_edit}' has been updated.")
+                print(f"\nNote '{note_to_edit}' has been updated.")
             elif x == 0:
                 return 'Exit "Edit func" success'
             else:
@@ -135,12 +135,14 @@ class NoteBook(UserDict):
         table.add_column("Tags")
 
         for obj in found_fields:
-            table.add_row(str(obj[0]), str(obj[1]))
+            str_tags = ", ".join(obj[1])  # Об'єднати теги в один рядок
+            table.add_row(str(obj[0]), str_tags)
 
         if found_fields:
             return console.print(table)
         else:
             return console.print("\n***Ooops***\nNo matching found.")
+
 
     def search_tag(self, text):
         found_tags = []
@@ -175,7 +177,7 @@ def add_note():
         print("\nEmpty note not allowed")
         add_note()
     else:
-        user_input_tags = input('***Notebook says***\nInput tags for a note (space-separated):\n>>>')
+        user_input_tags = input('\nInput tags for a note (space-separated):\n>>>')
         user_input_tags = user_input_tags.strip().split()
         tags = Tags()
         for user_tag in user_input_tags:
@@ -198,7 +200,7 @@ def delete_note():
         if 1 <= x <= len(keys):
             note_to_delete = keys[x - 1]
             del nb.data[note_to_delete]
-            print(f"Note '{note_to_delete}' has been deleted.")
+            print(f"\nNote '{note_to_delete}' has been deleted.")
         elif x == 0:
             return 'Exit "Delete func" success'
         else:

@@ -7,12 +7,12 @@ from normalize import normalize
 CATEGORIES = {"Audio": [".mp3", ".aiff", ".wav", ".ogg"],
               "Video": [".mkv", ".mov", ".mp4", ".avi"],
               "Document": [".docx", ".pptx", ".doc", ".txt", ".pdf", ".xlsx", ".pptx", ".rtf", ".xls", ".pub"],
-              "Image": [".jpeg", ".png", ".svg", ".jpg", ".bmp"],
-              "Archive": [".zip", ".tar", ".rar", ".7z", ".gz"],
+              "Image": [".jpeg", ".png", ".svg", ".jpg", ".bmp", ".gif", ".bmp"],
+              "Archive": [".zip", ".tar", ".7z", ".gz"],
               "Python": [".py", ".json", ".pyc"],
-              "Unknown extension": [], }
+              "Other": [] }
 dict_of_files = {}
-dict = {}
+dict_global = {}
 dict_of_ext = {}
 dict_ext = {}
 
@@ -83,11 +83,11 @@ def files_sorter(path: Path):
                     dict_of_files[cat].append(item.name)
                 else:
                     dict_of_files[cat] = [item.name]
-    dict.update(dict_of_files)
+    dict_global.update(dict_of_files)
     print(' ____________________________________________________________________________')
     print("| {:^74} |".format("▣ Files found in folders: ▣"))
     print('|____________________________________________________________________________|')
-    for el, values in dict.items():
+    for el, values in dict_global.items():
         print('|____________________________________________________________________________|')
         print("| {:^74} |".format(str("▣ "+ el + " ▣")))
         print('|____________________________________________________________________________|')
