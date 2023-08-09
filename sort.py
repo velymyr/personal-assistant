@@ -1,4 +1,3 @@
-import os
 import shutil
 from pathlib import Path
 from normalize import normalize
@@ -8,13 +7,13 @@ CATEGORIES = {"Audio": [".mp3", ".aiff", ".wav", ".ogg"],
               "Video": [".mkv", ".mov", ".mp4", ".avi"],
               "Document": [".docx", ".pptx", ".doc", ".txt", ".pdf", ".xlsx", ".pptx", ".rtf", ".xls", ".pub"],
               "Image": [".jpeg", ".png", ".svg", ".jpg", ".bmp", ".gif"],
-              "Archive": [".zip", ".tar", ".7z", ".gz"],
+              "Archive": [".zip", ".tar", ".7z", ".gz", ".rar"],
               "Python": [".py", ".json", ".pyc"],
-              "Other": [] }
-dict_of_files = {}
-dict_global = {}
-dict_of_ext = {}
-dict_ext = {}
+              "Unknown extension": [] }
+dictionary_of_files = {}
+dictionary_global = {}
+dictionary_of_ext = {}
+dictionary_ext = {}
 
 
 def move_file(path: Path, root_dir: Path,  categories: str):
@@ -29,7 +28,7 @@ def unpack_archive(path: Path):
     archive_folder = "Archive"
     ext = [".zip", ".tar", ".7z", ".gz", ".rar"]
 
-    for el in path.glob(f"**/*"):  # Обираю цей варіант суто для розширення охоплення пошуку, якщо наприклад якийсь архів не було відсортовано в папку Архів. Логічно що ми передаємо такі само розширення в функцію, але наприклад тут вже можна додати більше розширень задля охоплення більше файлів.
+    for el in path.glob(f"**/*"):  
         if not el.name.startswith('.'):
             if el.suffix in ext:
                 filename = el.stem
@@ -38,10 +37,7 @@ def unpack_archive(path: Path):
                 try:
                     shutil.unpack_archive(el, arch_dir)
                 except shutil.ReadError:
-                    print("| {:^74} |".format('This file format is not suported:'))
-                    print("|- {:<74}|".format(el.name))
-                    print('|____________________________________________________________________________|')
-
+                    continue
             else:
                 continue
 
@@ -79,42 +75,20 @@ def files_sorter(path: Path):
             if item.is_file():
                 # print(item)
                 cat = get_categories(item)
-                if dict_of_files.get(cat):
-                    dict_of_files[cat].append(item.name)
+                if dictionary_of_files.get(cat): 
+                    if item.name not in dictionary_of_files[cat]:
+                        dictionary_of_files[cat].append(item.name)
                 else:
-                    dict_of_files[cat] = [item.name]
-    dict_global.update(dict_of_files)
-    print(' ____________________________________________________________________________')
-    print("| {:^74} |".format("▣ Files found in folders: ▣"))
-    print('|____________________________________________________________________________|')
-    for el, values in dict_global.items():
-        print('|____________________________________________________________________________|')
-        print("| {:^74} |".format(str("▣ "+ el + " ▣")))
-        print('|____________________________________________________________________________|')
-        for value in values:
-            print("| {:<74} |".format(str(("► "+ value))))
-    print('|____________________________________________________________________________|')
-    
-
-
-def files_ext(path: Path):
-    for item in path.glob('**/*'):
-        if not item.name.startswith('.'):
-            if item.is_file():
-                cat = get_categories(item)
-                if dict_of_ext.get(cat):
-                    dict_of_ext[cat].add(item.suffix)
-                else:
-                    dict_of_ext[cat] = {item.suffix}
-
-    dict_ext.update(dict_of_ext)
-
-    print('\n ____________________________________________________________________________')
-    print("| {:^74} |".format("▣ Extensions found in files: ▣"))
-    print('|____________________________________________________________________________|')
-    for el, val in dict_ext.items():
-        print("| {:<20} | {:<51} |".format(str("▶ "+el), str(", ".join(val))))
-    print('|____________________________________________________________________________|')
+                        dictionary_of_files[cat] = [item.name]
+    dictionary_global.update(dictionary_of_files)
+    print(' ________________________________________________________')
+    print("| {:^54} |".format("▣ Files found in folders: ▣"))
+    print('|________________________________________________________|')
+    for el, values in dictionary_global.items():
+        print('|________________________________________________________|')
+        print("|▶ {:<30} | {:>20} |".format(el, len(values)))
+        print('|________________________________________________________|')
+    return dictionary_global == {}
 
 
 def sorter_starter():
@@ -127,15 +101,15 @@ def sorter_starter():
     while True:
 
         try:
-            # do not forget to change path lib sys.argv[1]
+            
             path = Path(input("|>>> "))
             if path.name.lower() in ("close", "exit", "good bye", "0"):
                 return "\nGood bye!"
             elif path.exists():
                 print("|"+"_"*32 + "|"+"\n")
-                print("_"*78)
-                print("|{:^70}|".format("✨✨✨ Sorting completed! ✨✨✨"))
-                print("|"+"_"*76 + "|")   
+                print("_"*58)
+                print("|{:^50}|".format("✨✨✨ Sorting completed! ✨✨✨"))
+                print("|"+"_"*56 + "|")   
             else:
                 print("_"*34)
                 print("|{:<32}|".format("Folder with this path not exist"))
@@ -150,15 +124,17 @@ def sorter_starter():
         sort_folder(path)
         delete_empty_folder(path)
         unpack_archive(path)
+        delete_empty_folder(path)
         files_sorter(path)
-        files_ext(path)
+        # files_ext(path)
 
-        print("\nIf you like to continue type 'resume' or type 'exit' to exit\n")
+        print("\n If you like to continue type 'resume' or type 'exit' to exit\n")
         user_answer = input("|>>> ")
         if user_answer.lower() in ("close", "exit", "goodbye", "0"):
             return '\nGood bye!'
         else:
-            print("\nInput path to folder:\n")
+            print("_"*34)
+            print("| Input path to folder:")
             continue
         
         
