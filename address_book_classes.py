@@ -9,7 +9,7 @@ from datetime import datetime as dt
 from datetime import date, timedelta
 from rich.console import Console
 from rich.table import Table
-from bd import main_bd
+
 
 
 class Field:
@@ -25,18 +25,12 @@ class Field:
 
 
 class Name(Field):
-
+  
     def __init__(self, value):
-        while True:
-            self.value = value
-            if self.value:
-                self.values = value
-                break
-            else:
-                print('Incorrect name')
-                value = input("Name: ")
-
-            
+        if not value.isalpha():
+            print("\nName must contain only alphabetical characters!")
+            return ValueError
+        self.value = value
 
 class Phone(Field):
 
@@ -197,7 +191,12 @@ class Record:
         return f"{old_phone} not present in phones of contact {self.name}"
 
     def days_to_birthday(self, birthday: Birthday):
-        result = main_bd(birthday)
+        str_date = str(birthday)
+        now = datetime.datetime.now()
+        then = datetime.datetime.strptime(str_date, "%Y-%m-%d")
+        delta1 = datetime.datetime(now.year, then.month, then.day)
+        delta2 = datetime.datetime(now.year+1, then.month, then.day)
+        result = ((delta1 if delta1 >= now else delta2) - now).days
         return result
 
     def get_phones(self, res):
@@ -339,39 +338,9 @@ class AddressBook(UserDict):
                         congratulate['Monday'].append(rec.name)
         for key, value in congratulate.items():
             if len(value):
-                result.append(f"Don't forget to Say Happy Birthday in {key} to {' '.join(value)}")
-        return '_' * 60 + '\n' + '\n'.join(result) + '\n' + '_' * 60
+                result.append(f"{key}: {', '.join(value)}")
+        return '! Do not forget to congratulate !\n'+'_' * 59 + '\n' + '\n'.join(result) + '\n' + '_' * 59
 
-    
-
-    def who_has_birthday_after_n_days(self, n_days):      
-        current_date = dt.now()
-        current_year = dt.now().year
-        future_birthday = current_date + timedelta(days=n_days)
-        #print (future_birthday.date())
-        contacts_with_birthday = []
-
-        for rec in self.data.values():
-            #print (rec)
-            if rec.birthday is not None:
-                new_year= date(current_year,12,31)
-                #print(new_year)
-                remaining_days_in_year = new_year - future_birthday.date()
-                #print (remaining_days_in_year.days)
-                if remaining_days_in_year.days > n_days:
-                    birthday_this_year = rec.birthday.replace(year=current_year)
-                    #print (birthday_this_year)
-                    if future_birthday.date() == birthday_this_year:
-                        contacts_with_birthday.append(rec.name)
-                else: 
-                    birthday_next_year = rec.birthday.replace(year=(current_year + 1))
-                    if future_birthday.date() == birthday_next_year:
-                        contacts_with_birthday.append(rec.name)
-
-        if contacts_with_birthday:
-            return ', '.join(name for name in contacts_with_birthday)
-        else:
-            return f"Nobody has birthday after {n_days} days"
 
     def show_all_address_book(self):
         console = Console()
@@ -398,7 +367,8 @@ class AddressBook(UserDict):
         return "Success!\n"
     
     def search(self, string: str):
-        output = ''
+        output = []
+        result_dict = AddressBook()
         for key in self.keys():
             rec = self[key]
             phone = '.'.join(phone for phone in rec.phones)
@@ -413,5 +383,8 @@ class AddressBook(UserDict):
             note = rec.note
 
             if string in str(rec.name.lower()) or string in phone or string in show_birthday or string in emailes or string in address or string in note:
-                output += str(rec)
-        return output
+                output.append(rec)
+            for item in output:
+                result_dict[item.name] = item
+
+        return result_dict.show_all_address_book()
