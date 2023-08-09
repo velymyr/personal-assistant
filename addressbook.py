@@ -1,5 +1,4 @@
 import difflib
-import datetime
 import functools
 from rich.console import Console
 from rich.table import Table
@@ -22,7 +21,7 @@ def input_errors(func):
                 return error_message
             else:
                 error_message = str(e).split(' ')[1]
-                return f"Wrong input"
+                return "Wrong input"
     return wrapper
 
 
@@ -31,21 +30,23 @@ def add(*args):
     name = Name(input("Name: ")).value.strip()
     for el in address_book.keys():
         if name == el:
-            return "This name already exist, use different name!"            
+            return "This name already exist, use different name!"
     else:
         phones = Phone().value
         birthday = Birthday().value
         email = Email().value.strip()
         address = Address(input("Address: ")).value
         note = Note(input("Note: ")).value
-        record = Record(name=name, phone=phones, birthday=birthday, email=email, address=address, note=note)
+        record = Record(name=name, phone=phones, birthday=birthday,
+                        email=email, address=address, note=note)
     return address_book.add_record(record)
 
 
 @input_errors
 def edit_contacts(*args):
     name = input('Contact name: ')
-    parameter = input('Which parameter to edit(name, phones, birthday, email, address, note): ').strip()
+    parameter = input(
+        'Which parameter to edit(name, phones, birthday, email, address, note): ').strip()
     new_value = input("New Value: ")
     res: Record = address_book.get(str(name))
 
@@ -54,11 +55,11 @@ def edit_contacts(*args):
             if parameter == 'birthday':
                 new_value = Birthday(new_value).value
             elif parameter == 'email':
-                parameter= 'emailes'
+                parameter = 'emailes'
                 new_contact = new_value.split(' ')
                 new_value = []
                 for emailes in new_contact:
-                        new_value.append(Email(emailes).value)
+                    new_value.append(Email(emailes).value)
             elif parameter == 'address':
                 new_value = Address(new_value).value
             elif parameter == 'note':
@@ -67,11 +68,11 @@ def edit_contacts(*args):
                 new_contact = new_value.split(' ')
                 new_value = []
                 for number in new_contact:
-                        new_value.append(Phone(number).value)
+                    new_value.extend(Phone(number).value)
             if parameter in res.__dict__.keys():
                 res.__dict__[parameter] = new_value
         res: Record = address_book.get(str(name))
-        print(res)   
+        return res
     except ValueError:
         print('Incorrect parameter! Please provide correct parameter')
     except NameError:
@@ -98,7 +99,7 @@ def remove_phone(*args):
 
 
 @input_errors
-def search(*args)-> str:
+def search(*args) -> str:
     text = input("Text for searching: ")
     return address_book.search(text)
 
@@ -178,7 +179,7 @@ def command_handler(user_input, command_dict):
     if possible_command:
         return f'Wrong command. Maybe you mean: {", ".join(possible_command)}'
     else:
-        return f'Wrong command.'
+        return 'Wrong command.'
 
 
 def instruction(command_dict):
@@ -194,7 +195,7 @@ def instruction(command_dict):
     console.print(table)
 
 
-def parser_input(user_input: str, command_dict):  # -> tuple():
+def parser_input(user_input: str, command_dict):
     command = None
     arguments = ''
 
@@ -213,18 +214,17 @@ def addressbook_starter():
         print("Address book loaded from file.")
     except FileNotFoundError:
         print("New address book created.")
- 
+
     print("\n ***Hello I`m a contact book.***\n")
     print("_"*59)
     print(address_book.congratulate())
     instruction(command_dict)
-    
+
     while True:
         user_input = input('Input a command\n>>>').lower()
         if user_input == 'menu':
             instruction(command_dict)
         elif user_input in ("exit", "0"):
-            # del_file_if_empty()
             print('Contact book closed')
             address_book.save()
             break

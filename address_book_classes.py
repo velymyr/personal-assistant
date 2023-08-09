@@ -4,7 +4,6 @@ import csv
 import json
 import pickle
 import re
-from datetime import datetime as dt
 from rich.console import Console
 from rich.table import Table
 
@@ -22,7 +21,7 @@ class Field:
 
 
 class Name(Field):
-  
+
     def __init__(self, value):
         if not value.isalpha():
             print("\nName must contain only alphabetical characters!")
@@ -160,15 +159,13 @@ class Record:
                 self.phones.extend(phone)
             else:
                 self.phones.append(phone)
-    
-    
+
     def add_birthday(self, birthday: Birthday):
         if not self.birthday:
             self.birthday = birthday
             return f"birthday {self.birthday} add to contact {self.name}"
         return f"{self.birthday} allready present in birthday data of contact {self.name}"
 
-    
     def add_phone(self, phone: Phone):
         if phone.value.strip() not in [p.value.strip() for p in self.phones]:
             self.phones.append(phone)
@@ -213,7 +210,6 @@ class Record:
         table.add_column("Address", width=40, no_wrap=False)
         table.add_column("Note", width=40, no_wrap=False)
 
-        # for record in self.data.values():
         name = self.name
         phones = ", ".join(str(phone) for phone in self.phones)
         bday = str(self.birthday) if self.birthday else ""
@@ -225,7 +221,6 @@ class Record:
 
         console.print(table)
         return ""
-
 
     def remove_phone(self, phone):
         for idx, p in enumerate(self.phones):
@@ -245,7 +240,7 @@ class AddressBook(UserDict):
 
         return record
 
-    def __str__(self):  # -> str:
+    def __str__(self):
         return "\n".join(str(r) for r in self.data.values())
 
     def iterator(self, n=3):
@@ -262,12 +257,10 @@ class AddressBook(UserDict):
             yield "\n".join(result)
 
     def serialize_to_csv(self):
-        filename='address_book.csv'
+        filename = 'address_book.csv'
         with open(filename, "w", newline="") as file:
             writer = csv.writer(file)
-            print(self.data)
             for rec in self.data.values():
-                print(rec)
                 name = rec.name
                 phones = [phone for phone in rec.phones]
                 birthday = rec.birthday.strftime(
@@ -277,11 +270,10 @@ class AddressBook(UserDict):
                 note = rec.note
                 writer.writerow(
                     [name, ",".join(phones), birthday, ",".join(emailes), address, note])
-        return "csv"
-
+        return 'Saved data to .csv'
 
     def serialize_to_json(self):
-        filename='address_book.json'
+        filename = 'address_book.json'
         data_list = []
         for record in self.data.values():
             data = {
@@ -295,6 +287,7 @@ class AddressBook(UserDict):
             data_list.append(data)
         with open(filename, "w") as file:
             json.dump(data_list, file)
+        return 'Saved data to .json'
 
     def save(self):
         with open('address_book.bin', 'wb') as file:
@@ -307,7 +300,7 @@ class AddressBook(UserDict):
         return self.data
 
     def get_current_week(self):
-        now = dt.now()
+        now = datetime.now()
         current_weekday = now.weekday()
         if current_weekday < 5:
             week_start = now - timedelta(days=2 + current_weekday)
@@ -316,7 +309,7 @@ class AddressBook(UserDict):
         return [week_start.date(), week_start.date() + timedelta(days=7)]
 
     def get_current_week(self):
-        now = dt.now()
+        now = datetime.now()
         current_weekday = now.weekday()
         if current_weekday < 5:
             week_start = now - timedelta(days=2 + current_weekday)
@@ -324,30 +317,28 @@ class AddressBook(UserDict):
             week_start = now - timedelta(days=current_weekday - 5)
         return [week_start.date(), week_start.date() + timedelta(days=7)]
 
-
-
     def congratulate(self):
         result = []
         WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Sunday']
-        current_year = dt.now().year
+        current_year = datetime.now().year
         congratulate = {'Monday': [], 'Tuesday': [],
                         'Wednesday': [], 'Thursday': [], 'Friday': []}
-        
+
         for rec in self.data.values():
-            if rec.birthday is not "":
+            if rec.birthday != "":
                 new_birthday = rec.birthday.replace(year=current_year)
                 birthday_weekday = new_birthday.weekday()
                 if self.get_current_week()[0] <= new_birthday < self.get_current_week()[1]:
                     if birthday_weekday < 5:
-                        congratulate[WEEKDAYS[birthday_weekday]].append(rec.name)
+                        congratulate[WEEKDAYS[birthday_weekday]].append(
+                            rec.name)
                     else:
                         congratulate['Monday'].append(rec.name)
         for key, value in congratulate.items():
             if len(value):
                 result.append(f"{key}: {', '.join(value)}")
         return '! Do not forget to congratulate !\n'+'_' * 59 + '\n' + '\n'.join(result) + '\n' + '_' * 59
-    
 
     def show_all_address_book(self):
         console = Console()
@@ -372,7 +363,7 @@ class AddressBook(UserDict):
 
         console.print(table)
         return "Success!\n"
-    
+
     def search(self, string: str):
         output = []
         result_dict = AddressBook()
