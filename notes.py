@@ -167,17 +167,23 @@ nb = NoteBook()
 
 
 def add_note():
-    user_input_note = input('\n***Notebook says***\nInput your note:\n>>>')
-    user_input_tags = input('***Notebook says***\nInput tags for a note (space-separated):\n>>>')
-    user_input_tags = user_input_tags.strip().split()
-    tags = Tags()
-    for user_tag in user_input_tags:
-        tag = Tag(user_tag)
-        
-        tags.tags.append(tag)
-    note = Note(user_input_note)
-    nb.add_note(note, tags)
-    return "You are good!!!\nNote has been added"
+    user_input_note = input('\n***Add func***\nInput your note ("0" - to exit delete func):\n>>>')
+    if user_input_note == "0":
+       return 'Exit "Add func" success'
+    elif not user_input_note:
+       print("\nEmpty note not allowed")
+       add_note()
+    else:
+        user_input_tags = input('***Notebook says***\nInput tags for a note (space-separated):\n>>>')
+        user_input_tags = user_input_tags.strip().split()
+        tags = Tags()
+        for user_tag in user_input_tags:
+            tag = Tag(user_tag)
+            
+            tags.tags.append(tag)
+        note = Note(user_input_note)
+        nb.add_note(note, tags)
+        return "You are good!!!\nNote has been added"
 
 
 def delete_note():
@@ -278,7 +284,7 @@ def notes_main():
     instruction(note_commands)
     nb.load()
     while True:
-        user_input_command = str(input("Input a command\n>>>"))
+        user_input_command = str(input("\nInput a command:\n>>>"))
         command = pars(user_input_command.lower(), note_commands)
         if user_input_command == 'menu':
             instruction(note_commands)
