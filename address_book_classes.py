@@ -327,6 +327,7 @@ class AddressBook(UserDict):
         return [week_start.date(), week_start.date() + timedelta(days=7)]
 
 
+
     def congratulate(self):
         result = []
         WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday',
@@ -334,9 +335,10 @@ class AddressBook(UserDict):
         current_year = dt.now().year
         congratulate = {'Monday': [], 'Tuesday': [],
                         'Wednesday': [], 'Thursday': [], 'Friday': []}
+        
         for rec in self.data.values():
             #print(rec.birthday)
-            if rec.birthday is not None:
+            if rec.birthday is not "":
                 new_birthday = rec.birthday.replace(year=current_year)
                 #print(new_birthday)
                 birthday_weekday = new_birthday.weekday()
@@ -347,31 +349,32 @@ class AddressBook(UserDict):
                         congratulate['Monday'].append(rec.name)
         for key, value in congratulate.items():
             if len(value):
-                result.append(f"Don't forget to Say Happy Birthday in {key} to {' '.join(value)}")
-        return '_' * 60 + '\n' + '\n'.join(result) + '\n' + '_' * 60
+                result.append(f"{key}: {', '.join(value)}")
+        return '! Do not forget to congratulate !\n'+'_' * 59 + '\n' + '\n'.join(result) + '\n' + '_' * 59
+
     # def congratulate(self):
-    #     result = []
-    #     WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday',
-    #                 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    #     current_year = dt.now().year
-    #     congratulate = {'Monday': [], 'Tuesday': [],
-    #                     'Wednesday': [], 'Thursday': [], 'Friday': []}
-        
-    #     for rec in self.data.values():
-    #         #print(rec.birthday)
-    #         if rec.birthday is not None:
-    #             new_birthday = rec.birthday.replace(year=current_year)
-    #             #print(new_birthday)
-    #             birthday_weekday = new_birthday.weekday()
-    #             if self.get_current_week()[0] <= new_birthday < self.get_current_week()[1]:
-    #                 if birthday_weekday < 5:
-    #                     congratulate[WEEKDAYS[birthday_weekday]].append(rec.name)
-    #                 else:
-    #                     congratulate['Monday'].append(rec.name)
-    #     for key, value in congratulate.items():
-    #         if len(value):
-    #             result.append(f"{key}: {', '.join(value)}")
-    #     return '! Do not forget to congratulate !\n'+'_' * 59 + '\n' + '\n'.join(result) + '\n' + '_' * 59
+        # result = []
+        # WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday',
+        #             'Thursday', 'Friday', 'Saturday', 'Sunday']
+        # current_year = dt.now().year
+        # congratulate = {'Monday': [], 'Tuesday': [],
+        #                 'Wednesday': [], 'Thursday': [], 'Friday': []}
+        # for rec in self.data.values():
+        #     #print(rec.birthday)
+        #     if rec.birthday is not "":
+        #         new_birthday = rec.birthday.replace(year=current_year)
+        #         #print(new_birthday)
+        #         birthday_weekday = new_birthday.weekday()
+        #         if self.get_current_week()[0] <= new_birthday < self.get_current_week()[1]:
+        #             if birthday_weekday < 5:
+        #                 congratulate[WEEKDAYS[birthday_weekday]].append(rec.name)
+        #             else:
+        #                 congratulate['Monday'].append(rec.name)
+        # for key, value in congratulate.items():
+        #     if len(value):
+        #         result.append(f"Don't forget to Say Happy Birthday in {key} to {' '.join(value)}")
+        # return '_' * 60 + '\n' + '\n'.join(result) + '\n' + '_' * 60
+    
 
 
     def show_all_address_book(self):
