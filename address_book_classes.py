@@ -35,6 +35,16 @@ class Name(Field):
                 print('Incorrect name')
                 value = input("Name: ")
 
+            # try:
+            # #     for number in self.values.split(' '):
+            # #         if re.match('^\+\d{12}$', number) or number == '':
+            # #             self.value.append(number)
+            # #         else:
+            # #             raise ValueError
+            # except ValueError:
+
+            # else:
+
 
 class Phone(Field):
 
@@ -254,9 +264,9 @@ class AddressBook(UserDict):
                     [name, ",".join(phones), birthday, ",".join(emailes), address, note])
         return "csv"
 
-    def serialize_to_pickle(self, filename):
-        with open(filename, "wb") as fh:
-            pickle.dump(self.data, fh)
+    # def serialize_to_pickle(self, filename):
+    #     with open(filename, "wb") as fh:
+    #         pickle.dump(self.data, fh)
 
     def serialize_to_json(self):
         filename='address_book.json'
@@ -371,3 +381,45 @@ class AddressBook(UserDict):
                 table.add_row(name, phones, bday, emails, address, note)
             
             console.print(table)
+    def show_all_address_book(self):
+        console = Console()
+        table = Table(show_header=True, header_style="bold magenta",
+                      width=120, show_lines=True)
+        table.add_column("Name", width=40, no_wrap=False)
+        table.add_column("Phones", width=40, no_wrap=False)
+        table.add_column("Birthday", width=40, no_wrap=False)
+        table.add_column("Emails", width=40, no_wrap=False)
+        table.add_column("Address", width=40, no_wrap=False)
+        table.add_column("Note", width=40, no_wrap=False)
+
+        for record in self.data.values():
+            name = record.name
+            phones = ", ".join(str(phone) for phone in record.phones)
+            bday = str(record.birthday) if record.birthday else ""
+            emails = ", ".join(str(email) for email in record.emailes)
+            address = str(record.address) if record.address else ""
+            note = str(record.note) if record.note else ""
+
+            table.add_row(name, phones, bday, emails, address, note)
+
+        console.print(table)
+        return "Success!\n"
+    
+    def search(self, string: str):
+        output = ''
+        for key in self.keys():
+            rec = self[key]
+            phone = '.'.join(phone for phone in rec.phones)
+
+            if rec.birthday == "":
+                show_birthday = ""
+            else:
+                show_birthday = datetime.strftime(rec.birthday, '%d/%m/%Y')
+
+            emailes = ".".join(email for email in rec.emailes)
+            address = rec.address
+            note = rec.note
+
+            if string in str(rec.name.lower()) or string in phone or string in show_birthday or string in emailes or string in address or string in note:
+                output += str(rec)
+        return output

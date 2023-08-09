@@ -1,7 +1,7 @@
 from datetime import datetime
 from address_book_classes import AddressBook, Name, Phone, Record, Birthday, Email, Address, Note
 import re
-import pickle
+#import pickle
 
 
 address_book = AddressBook()
@@ -24,6 +24,22 @@ def input_error(func):
             print("Give me a name and phone number in format +12dig or date birthday dd/mm/YYYY")
         except AttributeError:
             print("Give me a name and phone number in format +12dig or date birthday dd/mm/YYYY")
+            print(
+                f"Give me a name and phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
+        except IndexError:
+            print(
+                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
+        except TypeError:
+            print(
+                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
+        except UnboundLocalError:
+            print("Contact exists")
+        except ValueError:
+            print(
+                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
+        except AttributeError:
+            print(
+                f"Give me a name and  phone number in format +380(88)777-77-77 or date birthday dd/mm/YYYY")
     return wrapper
 
 

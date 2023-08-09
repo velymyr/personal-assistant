@@ -81,10 +81,15 @@ def remove_phone(*args):
     return f"No contact {name} in address book"
 
 
+
 # @input_errors
 # def save(*args):
 #     if Record.__name__:
 #         return save_address_book
+@input_errors
+def search(*args) -> str:
+    text = input("Text for searching: ")
+    return address_book.search(text)
 
 
 # @input_errors
@@ -98,12 +103,13 @@ def who_has_b_after_n_days():
         n_days = int(days)
     except TypeError:
         return 'This is not a number. Give me a number of days.'
-    
+
     return address_book.who_has_birthday_after_n_days(n_days)
 
 
 def exit_book():
     pass
+
 
 def menu():
     pass
@@ -125,6 +131,7 @@ command_dict = {
 }
 
 
+@input_errors
 def command_handler(user_input, command_dict):
     if user_input in command_dict:
         return command_dict[user_input][0]
@@ -138,13 +145,14 @@ def command_handler(user_input, command_dict):
 
 def instruction(command_dict):
     console = Console()
-    table = Table(show_header=True, header_style="bold magenta", width=60, show_lines=False)
-    table.add_column("Command", max_width= None, no_wrap=False)
-    table.add_column("Description", width= 20, no_wrap=False)
+    table = Table(show_header=True, header_style="bold magenta",
+                  width=60, show_lines=False)
+    table.add_column("Command", max_width=None, no_wrap=False)
+    table.add_column("Description", width=20, no_wrap=False)
 
     for func_name, func in command_dict.items():
         table.add_row(str(func_name), str(func[1]))
-    
+
     console.print(table)
 
 
@@ -174,6 +182,12 @@ def addressbook_starter():
     instruction(command_dict)
     print(address_book.congratulate())
     
+
+    print("\n ***Hello I`m a contact book.***\n")
+    print("_"*50)
+    print(address_book.congratulate())
+    instruction(command_dict)
+
     while True:
         user_input = input('Input a command\n>>>').lower()
         # input 'menu' to show all funcs
