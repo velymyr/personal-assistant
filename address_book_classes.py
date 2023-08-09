@@ -27,7 +27,14 @@ class Field:
 class Name(Field):
 
     def __init__(self, value):
-        self.value = value
+        while True:
+            self.value = value
+            if self.value:
+                self.values = value
+                break
+            else:
+                print('Incorrect name')
+                value = input("Name: ")
 
 
 class Phone(Field):
