@@ -162,7 +162,7 @@ def parser_input(user_input: str, command_dict):  # -> tuple():
 
 # def main():
 def addressbook_starter():
-    filename = "address_book"
+    filename = "address_book.bin"
     try:
         address_book.load(filename)
         print("Address book loaded from file.")

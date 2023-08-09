@@ -278,7 +278,7 @@ class AddressBook(UserDict):
 
     def load(self, file_name):
         #emptyness = os.stat(file_name + '.bin')
-        with open(file_name + '.bin', 'rb') as file:
+        with open(file_name, 'rb') as file:
             self.data = pickle.load(file)
         return self.data
 
