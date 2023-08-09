@@ -5,8 +5,8 @@ from datetime import datetime as dt
 from datetime import date, timedelta
 from rich.console import Console
 from rich.table import Table
-# import csv
-# import json
+import csv
+#import json
 import pickle
 import os
 # filename= 'address_book_1.txt'
@@ -237,7 +237,8 @@ class AddressBook(UserDict):
         if result:
             yield "\n".join(result)
 
-    def serialize_to_csv(self, filename):
+    def serialize_to_csv(self):
+        filename='address_book.csv'
         with open(filename, "w", newline="") as file:
             writer = csv.writer(file)
             print(self.data)
@@ -248,8 +249,11 @@ class AddressBook(UserDict):
                 birthday = rec.birthday.value.strftime(
                     "%d/%m/%Y") if rec.birthday else ""
                 emailes = [email.value for email in rec.emailes]
+                address = rec.address
+                note = rec.note
                 writer.writerow(
-                    [name, ",".join(phones), birthday, ",".join(emailes)])
+                    [name, ",".join(phones), birthday, ",".join(emailes), address, note])
+        return "csv"
 
     def serialize_to_pickle(self, filename):
         with open(filename, "wb") as fh:
@@ -330,7 +334,7 @@ class AddressBook(UserDict):
                 #print (remaining_days_in_year.days)
                 if remaining_days_in_year.days > n_days:
                     birthday_this_year = rec.birthday.replace(year=current_year)
-                    print (birthday_this_year)
+                    #print (birthday_this_year)
                     if future_birthday.date() == birthday_this_year:
                         contacts_with_birthday.append(rec.name)
                 else: 

@@ -113,6 +113,7 @@ command_dict = {
     'add': [add, 'to add contact'],
     'show all': [show_all_address_book, 'to show all contacts'],
     'save': [address_book.save, 'to save address book'],
+    'save_csv': [address_book.serialize_to_csv, 'to save address book .csv'],
     'bday': [get_days_to_birthday, 'to get day to birthday'],
     'blist': [who_has_b_after_n_days, 'to show bday boys after N days'],
     'remove': [remove_phone, 'to remove phone from contact'],
