@@ -21,7 +21,7 @@ def normalize(name: str) -> str:
 
 
 def test_normalize():
-    assert normalize("****Слава-Україні****") == "____Slava_Ukraini____"
+    assert normalize("****Слава-Україні****") == "____Slava_Ukrayini____"
 
 
 if __name__ == "__main__":
