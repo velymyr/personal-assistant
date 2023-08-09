@@ -24,8 +24,10 @@ class Field:
 class Name(Field):
 
     def __init__(self, value):
+        if not value.isalpha():
+            print("\nName must contain only alphabetical characters!")
+            return ValueError
         self.value = value
-
 
 class Phone(Field):
 
@@ -221,8 +223,7 @@ class Record:
         console.print(table)
         return ""
 
-        # return f": {self.name} | {', '.join(p for p in self.phones)} | {(str(self.birthday))} | {', '.join(p for p in self.emailes)} | {(str(self.address))} | {(str(self.note))} |"
-
+        
     def remove_phone(self, phone):
         for idx, p in enumerate(self.phones):
             print(f'p= {self.phones[idx]}')
@@ -321,7 +322,7 @@ class AddressBook(UserDict):
         for key, value in congratulate.items():
             if len(value):
                 result.append(f"{key}: {', '.join(value)}")
-        return '! Do not forget to congratulate !\n'+'_' * 50 + '\n' + '\n'.join(result) + '\n' + '_' * 50
+        return '! Do not forget to congratulate !\n'+'_' * 59 + '\n' + '\n'.join(result) + '\n' + '_' * 59
 
     def show_all_address_book(self):
         console = Console()
@@ -348,7 +349,8 @@ class AddressBook(UserDict):
         return "Success!\n"
     
     def search(self, string: str):
-        output = ''
+        output = []
+        result_dict = AddressBook()
         for key in self.keys():
             rec = self[key]
             phone = '.'.join(phone for phone in rec.phones)
@@ -363,5 +365,8 @@ class AddressBook(UserDict):
             note = rec.note
 
             if string in str(rec.name.lower()) or string in phone or string in show_birthday or string in emailes or string in address or string in note:
-                output += str(rec)
-        return output
+                output.append(rec)
+            for item in output:
+                result_dict[item.name] = item
+
+        return result_dict.show_all_address_book()
