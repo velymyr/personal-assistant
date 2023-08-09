@@ -325,6 +325,7 @@ class AddressBook(UserDict):
         current_year = dt.now().year
         congratulate = {'Monday': [], 'Tuesday': [],
                         'Wednesday': [], 'Thursday': [], 'Friday': []}
+        
         for rec in self.data.values():
             #print(rec.birthday)
             if rec.birthday is not None:
