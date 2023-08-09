@@ -42,7 +42,7 @@ def menu():
             result = sorter_starter()
             print(result)
         elif user_input == '0' or user_input.lower() == "exit":
-            print('Goodbye!')
+            print('\nGoodbye!\n')
             break
         else:
             print("_"*34)

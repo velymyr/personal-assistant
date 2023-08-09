@@ -29,13 +29,16 @@ def input_errors(func):
 @input_errors
 def add(*args):
     name = Name(input("Name: ")).value.strip()
-    phones = Phone().value
-    birthday = Birthday().value
-    email = Email().value.strip()
-    address = Address(input("Address: ")).value
-    note = Note(input("Note: ")).value
-    record = Record(name=name, phone=phones, birthday=birthday,
-                    email=email, address=address, note=note)
+    for el in address_book.keys():
+        if name == el:
+            return "This name already exist, use different name!"            
+    else:
+        phones = Phone().value
+        birthday = Birthday().value
+        email = Email().value.strip()
+        address = Address(input("Address: ")).value
+        note = Note(input("Note: ")).value
+        record = Record(name=name, phone=phones, birthday=birthday, email=email, address=address, note=note)
     return address_book.add_record(record)
 
 
@@ -175,7 +178,7 @@ def addressbook_starter():
         print("New address book created.")
         
     print("\n ***Hello I`m a contact book.***\n")
-    print("_"*50)
+    print("_"*59)
     print(address_book.congratulate())
     instruction(command_dict)
     

@@ -119,6 +119,8 @@ def files_ext(path: Path):
 
 def sorter_starter():
 
+    print("|{:^32}|".format("▣ For exit type 'exit' or '0' ▣"))
+    print("|"+"_"*32 + "|")
     print("|{:^32}|".format("Input path to folder:"))
     print("|"+"_"*32 + "|")
 
@@ -151,9 +153,9 @@ def sorter_starter():
         files_sorter(path)
         files_ext(path)
 
-        print("\nIf you like to continue type 'resume' or type 'close' to exit\n")
+        print("\nIf you like to continue type 'resume' or type 'exit' to exit\n")
         user_answer = input("|>>> ")
-        if user_answer.lower() in ("close", "exit", "goodbye"):
+        if user_answer.lower() in ("close", "exit", "goodbye", "0"):
             return '\nGood bye!'
         else:
             print("\nInput path to folder:\n")
