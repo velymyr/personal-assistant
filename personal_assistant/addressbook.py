@@ -2,7 +2,7 @@ import difflib
 import functools
 from rich.console import Console
 from rich.table import Table
-from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
+from personal_assistant.address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
 from datetime import date, timedelta, datetime
 
 address_book = AddressBook()
