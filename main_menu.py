@@ -1,5 +1,3 @@
-""""This is main Menu"""
-
 from sort import sorter_starter
 from addressbook import addressbook_starter
 from notes import notes_main as notes_starter
@@ -7,7 +5,7 @@ from notes import notes_main as notes_starter
 
 def menu():
 
-    COMMANDS = [" 1  - AddressBook📒", " 2  - NoteBook📋",
+    commands = [" 1  - AddressBook📒", " 2  - NoteBook📋",
                 " 3  - Files sorter📂", " 0  - Exit❌"]
 
     while True:
@@ -15,7 +13,7 @@ def menu():
         print("_"*34)
         print("| {:<3} {:^27}|".format("☰", "Welcome to main menu"))
         print('|'+'_'*32 + '|')
-        for el in COMMANDS:
+        for el in commands:
             print('|{:<31}|'.format(el))
         print('|'+'_'*32 + '|')
         print('|{:<32}|'.format('Type number to start:  '))

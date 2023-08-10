@@ -23,10 +23,12 @@ class Field:
 class Name(Field):
 
     def __init__(self, value):
-        if not value.isalpha():
-            print("\nName must contain only alphabetical characters!")
-            return ValueError
-        self.value = value
+        name = value.split(" ")
+        for elem in name:
+            if not elem.isalpha():
+                print("\nName must contain only alphabetical characters!")
+                return ValueError
+            self.value = value
 
 
 class Phone(Field):
@@ -38,10 +40,10 @@ class Phone(Field):
                 self.values = value
             else:
                 self.values = input(
-                    'Введіть номер телефону, 12 цифр зі знаком "+" попереду:' )
+                    'Please enter phone number in format +380998887722 (\'+\' symbol and 12 digits)')
             try:
                 for number in self.values.split(' '):
-                    if re.match('^\+\d{12}$', number) or number == '':
+                    if re.match(r'^\+\d{12}$', number) or number == '':
                         self.value.append(number)
                     else:
                         raise ValueError
@@ -82,7 +84,7 @@ class Birthday(Field):
             else:
                 self.value = input("Birthday date(dd/mm/YYYY): ")
             try:
-                if re.match('^\d{2}/\d{2}/\d{4}$', self.value):
+                if re.match(r'^\d{2}/\d{2}/\d{4}$', self.value):
                     self.value = datetime.strptime(
                         self.value.strip(), "%d/%m/%Y")
                     self.value = self.value.date()
@@ -106,7 +108,9 @@ class Email(Field):
             else:
                 self.value = input("Email: ")
             try:
-                if re.match ("^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$", self.value) or self.value == '':
+                if re.match(
+                        r"^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$",
+                        self.value) or self.value == '':
                     break
                 else:
                     raise ValueError
@@ -142,18 +146,19 @@ class Note(Field):
 
 class Record:
 
-    def __init__(self, name: Name, phone: Phone = None, birthday: Birthday = None, email: Email = None, address: Address = None, note: Note = None) -> None:
+    def __init__(self, name: Name, phone: Phone = None, birthday: Birthday = None, email: Email = None,
+                 address: Address = None, note: Note = None) -> None:
         self.name = name
         self.phones = []
         self.birthday = birthday
-        self.emailes = []
+        self.emails = []
         self.address = address
         self.note = note
         if email:
             if isinstance(email, list):
-                self.emailes.extend(email)
+                self.emails.extend(email)
             else:
-                self.emailes.append(email)
+                self.emails.append(email)
         if phone:
             if isinstance(phone, list):
                 self.phones.extend(phone)
@@ -190,7 +195,7 @@ class Record:
         now = datetime.now()
         then = datetime.strptime(str_date, "%Y-%m-%d")
         delta1 = datetime(now.year, then.month, then.day)
-        delta2 = datetime(now.year+1, then.month, then.day)
+        delta2 = datetime(now.year + 1, then.month, then.day)
         result = ((delta1 if delta1 >= now else delta2) - now).days
         return result
 
@@ -213,14 +218,14 @@ class Record:
         name = self.name
         phones = ", ".join(str(phone) for phone in self.phones)
         bday = str(self.birthday) if self.birthday else ""
-        emails = ", ".join(str(email) for email in self.emailes)
+        emails = ", ".join(str(email) for email in self.emails)
         address = str(self.address) if self.address else ""
         note = str(self.note) if self.note else ""
 
         table.add_row(name, phones, bday, emails, address, note)
 
         console.print(table)
-        return ""
+        return "\nSuccess!\n"
 
     def remove_phone(self, phone):
         for idx, p in enumerate(self.phones):
@@ -265,11 +270,11 @@ class AddressBook(UserDict):
                 phones = [phone for phone in rec.phones]
                 birthday = rec.birthday.strftime(
                     "%d/%m/%Y") if rec.birthday else ""
-                emailes = [email for email in rec.emailes]
+                emails = [email for email in rec.emails]
                 address = rec.address
                 note = rec.note
                 writer.writerow(
-                    [name, ",".join(phones), birthday, ",".join(emailes), address, note])
+                    [name, ",".join(phones), birthday, ",".join(emails), address, note])
         return 'Saved data to .csv'
 
     def serialize_to_json(self):
@@ -280,7 +285,7 @@ class AddressBook(UserDict):
                 "name": record.name,
                 "phones": [phone for phone in record.phones],
                 "birthday": record.birthday.strftime("%d/%m/%Y") if record.birthday else "",
-                "emailes": [email for email in record.emailes],
+                "emails": [email for email in record.emails],
                 "address": record.address,
                 "note": record.note
             }
@@ -319,7 +324,7 @@ class AddressBook(UserDict):
 
     def congratulate(self):
         result = []
-        WEEKDAYS = ['Monday', 'Tuesday', 'Wednesday',
+        weekdays = ['Monday', 'Tuesday', 'Wednesday',
                     'Thursday', 'Friday', 'Saturday', 'Sunday']
         current_year = datetime.now().year
         congratulate = {'Monday': [], 'Tuesday': [],
@@ -331,14 +336,14 @@ class AddressBook(UserDict):
                 birthday_weekday = new_birthday.weekday()
                 if self.get_current_week()[0] <= new_birthday < self.get_current_week()[1]:
                     if birthday_weekday < 5:
-                        congratulate[WEEKDAYS[birthday_weekday]].append(
+                        congratulate[weekdays[birthday_weekday]].append(
                             rec.name)
                     else:
                         congratulate['Monday'].append(rec.name)
         for key, value in congratulate.items():
             if len(value):
                 result.append(f"{key}: {', '.join(value)}")
-        return '! Do not forget to congratulate !\n'+'_' * 59 + '\n' + '\n'.join(result) + '\n' + '_' * 59
+        return '! Do not forget to congratulate !\n' + '_' * 59 + '\n' + '\n'.join(result) + '\n' + '_' * 59
 
     def show_all_address_book(self):
         console = Console()
@@ -355,7 +360,7 @@ class AddressBook(UserDict):
             name = record.name
             phones = ", ".join(str(phone) for phone in record.phones)
             bday = str(record.birthday) if record.birthday else ""
-            emails = ", ".join(str(email) for email in record.emailes)
+            emails = ", ".join(str(email) for email in record.emails)
             address = str(record.address) if record.address else ""
             note = str(record.note) if record.note else ""
 
@@ -364,7 +369,15 @@ class AddressBook(UserDict):
         console.print(table)
         return "Success!\n"
 
-    def search(self, string: str):
+    def search(self, s: str):
+        """Used to search for a specific contact in the address book based on a given search term
+
+        Parameters
+        ----------
+        s : str
+            a string representing the search term
+        """
+
         output = []
         result_dict = AddressBook()
         for key in self.keys():
@@ -376,13 +389,14 @@ class AddressBook(UserDict):
             else:
                 show_birthday = datetime.strftime(rec.birthday, '%d/%m/%Y')
 
-            emailes = ".".join(email for email in rec.emailes)
+            emails = ".".join(email for email in rec.emails)
             address = rec.address
             note = rec.note
 
-            if string in str(rec.name.lower()) or string in phone or string in show_birthday or string in emailes or string in address or string in note:
+            if s in str(rec.name) or s in phone or s in show_birthday or s in emails or s in address or s in note:
                 output.append(rec)
-            for item in output:
-                result_dict[item.name] = item
-
-        return result_dict.show_all_address_book()
+                for item in output:
+                    result_dict[item.name] = item
+                return result_dict.show_all_address_book()
+            else:
+                return "\n<<< No matches found >>>\n"
