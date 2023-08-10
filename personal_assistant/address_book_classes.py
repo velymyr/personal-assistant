@@ -108,8 +108,7 @@ class Email(Field):
             else:
                 self.value = input("Email: ")
             try:
-                if re.match(
-                        r"^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$",
+                if re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
                         self.value) or self.value == '':
                     break
                 else:
@@ -395,8 +394,6 @@ class AddressBook(UserDict):
 
             if s in str(rec.name) or s in phone or s in show_birthday or s in emails or s in address or s in note:
                 output.append(rec)
-                for item in output:
-                    result_dict[item.name] = item
-                return result_dict.show_all_address_book()
-        else:
-            return "\n<<< No matches found >>>\n"
+            for item in output:
+                result_dict[item.name] = item
+        return result_dict.show_all_address_book()
