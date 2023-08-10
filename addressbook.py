@@ -20,7 +20,7 @@ def input_errors(func):
                 error_message = "Too many arguments provided"
                 return error_message
             else:
-                error_message = str(e).split(' ')[1]
+                # error_message = str(e).split(' ')[1]
                 return "Wrong input"
     return wrapper
 
@@ -44,39 +44,49 @@ def add(*args):
 
 @input_errors
 def edit_contacts(*args):
-    name = input('Contact name: ')
-    parameter = input(
-        'Which parameter to edit(name, phones, birthday, email, address, note): ').strip()
-    new_value = input("New Value: ")
-    res: Record = address_book.get(str(name))
+        
+        name = input('Contact name: ')
+        if name not in address_book.keys():
+            return "This name not exist! Use 'show all' to show contacts...\n"
+        else:        
+            parameter = input('Which parameter to edit(name, phones, birthday, email, address, note): ').strip()
+            try:
+                if parameter not in ("name", "phones", "birthday", "email", "address", "note"):
+                    raise ValueError
+                else:
+                    new_value = input("New Value: ")
+                    res: Record = address_book.get(str(name))
 
-    try:
-        if res:
-            if parameter == 'birthday':
-                new_value = Birthday(new_value).value
-            elif parameter == 'email':
-                parameter = 'emailes'
-                new_contact = new_value.split(' ')
-                new_value = []
-                for emailes in new_contact:
-                    new_value.append(Email(emailes).value)
-            elif parameter == 'address':
-                new_value = Address(new_value).value
-            elif parameter == 'note':
-                new_value = Note(new_value).value
-            elif parameter == 'phones':
-                new_contact = new_value.split(' ')
-                new_value = []
-                for number in new_contact:
-                    new_value.extend(Phone(number).value)
-            if parameter in res.__dict__.keys():
-                res.__dict__[parameter] = new_value
-        res: Record = address_book.get(str(name))
-        return res
-    except ValueError:
-        print('Incorrect parameter! Please provide correct parameter')
-    except NameError:
-        print('There is no such contact in address book!')
+                try:
+                    if res:
+                        if parameter == 'birthday':
+                            new_value = Birthday(new_value).value
+                        elif parameter == 'email':
+                            parameter = 'emailes'
+                            new_contact = new_value.split(' ')
+                            new_value = []
+                            for emailes in new_contact:
+                                new_value.append(Email(emailes).value)
+                        elif parameter == 'address':
+                            new_value = Address(new_value).value
+                        elif parameter == 'note':
+                            new_value = Note(new_value).value
+                        elif parameter == 'phones':
+                            new_contact = new_value.split(' ')
+                            new_value = []
+                            for number in new_contact:
+                                new_value.extend(Phone(number).value)
+                        if parameter in res.__dict__.keys():
+                            res.__dict__[parameter] = new_value
+                    res: Record = address_book.get(str(name))
+                    return res
+                except ValueError:
+                    print('Incorrect parameter! Please provide correct parameter')
+                except NameError:
+                    print('There is no such contact in address book!')
+            except ValueError:
+                return "Wrong parameter!"
+                
 
 
 @input_errors
@@ -235,6 +245,8 @@ def addressbook_starter():
             else:
                 result = command_handler(user_input, command_dict)
             print(result)
+    address_book.save()
+
 
 
 if __name__ == "__main__":

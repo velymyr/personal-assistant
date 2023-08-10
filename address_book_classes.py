@@ -23,10 +23,12 @@ class Field:
 class Name(Field):
 
     def __init__(self, value):
-        if not value.isalpha():
-            print("\nName must contain only alphabetical characters!")
-            return ValueError
-        self.value = value
+        name = value.split(" ")
+        for elem in name:
+            if not elem.isalpha():
+                print("\nName must contain only alphabetical characters!")
+                return ValueError
+            self.value = value
 
 
 class Phone(Field):
@@ -220,7 +222,7 @@ class Record:
         table.add_row(name, phones, bday, emails, address, note)
 
         console.print(table)
-        return ""
+        return "\nSuccess!\n"
 
     def remove_phone(self, phone):
         for idx, p in enumerate(self.phones):
