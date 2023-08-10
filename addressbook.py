@@ -20,7 +20,6 @@ def input_errors(func):
                 error_message = "Too many arguments provided"
                 return error_message
             else:
-                # error_message = str(e).split(' ')[1]
                 return "Wrong input"
     return wrapper
 
@@ -47,7 +46,7 @@ def edit_contacts(*args):
         
         name = input('Contact name: ')
         if name not in address_book.keys():
-            return "This name not exist! Use 'show all' to show contacts...\n"
+            return "\nThis name not exist! Use 'show all' to show contacts...\n"
         else:        
             parameter = input('Which parameter to edit(name, phones, birthday, email, address, note): ').strip()
             try:
@@ -117,12 +116,12 @@ def show_all_address_book():
     if Record.__name__:
         return address_book.show_all_address_book()
 
-
+@input_errors
 def get_days_to_birthday(*args):
     name = Name(input("Name: ")).value.strip()
     if name in address_book:
         res: Record = address_book.get(str(name))
-        result = res.days_to_birthday(res.birthday)
+        result = int(res.days_to_birthday(res.birthday)) + 1
         if result == 0:
             return f'{name } tomorrow birthday'
         if result == 365:
@@ -135,8 +134,8 @@ def get_days_to_birthday(*args):
 def who_has_bd_n_days():
     days = input(str('How many days?\n>>> '))
     try:
-        n_days = int(days)
-    except TypeError:
+        n_days = int(days) +1
+    except (TypeError, ValueError):
         return 'This is not a number. Give me a number of days.'
     result = []
     result_dict = AddressBook()
@@ -148,10 +147,13 @@ def who_has_bd_n_days():
             next_date = (datetime.now() + timedelta(days=n_days)).date()
             if date.today() <= new_birthday < next_date:
                 result.append(account)
-    for item in result:
-        result_dict[item.name] = item
+    if result:
+        for item in result:
+            result_dict[item.name] = item
 
-    return result_dict.show_all_address_book()
+        return result_dict.show_all_address_book()
+    else:
+        return f"\nNobody has birthday in {days} days\n"
 
 
 def exit_book():
@@ -241,8 +243,10 @@ def addressbook_starter():
             command, arguments = parser_input(user_input, command_dict)
             if command in command_dict:
                 result = command_handler(command, command_dict)(*arguments)
+                address_book.save()
             else:
                 result = command_handler(user_input, command_dict)
+                address_book.save()
             print(result)
     address_book.save()
 

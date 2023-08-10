@@ -384,7 +384,8 @@ class AddressBook(UserDict):
 
             if string in str(rec.name) or string in phone or string in show_birthday or string in emailes or string in address or string in note:
                 output.append(rec)
-            for item in output:
-                result_dict[item.name] = item
-
-        return result_dict.show_all_address_book()
+                for item in output:
+                    result_dict[item.name] = item
+                return result_dict.show_all_address_book()
+            else:
+                return "\n<<< No matches found >>>\n"
