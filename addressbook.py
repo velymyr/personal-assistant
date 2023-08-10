@@ -61,11 +61,11 @@ def edit_contacts(*args):
                         if parameter == 'birthday':
                             new_value = Birthday(new_value).value
                         elif parameter == 'email':
-                            parameter = 'emailes'
+                            parameter = 'emails'
                             new_contact = new_value.split(' ')
                             new_value = []
-                            for emailes in new_contact:
-                                new_value.append(Email(emailes).value)
+                            for emails in new_contact:
+                                new_value.append(Email(emails).value)
                         elif parameter == 'address':
                             new_value = Address(new_value).value
                         elif parameter == 'note':
@@ -182,11 +182,11 @@ command_dict = {
 
 
 @input_errors
-def command_handler(user_input, command_dict):
-    if user_input in command_dict:
-        return command_dict[user_input][0]
+def command_handler(user_input, command):
+    if user_input in command:
+        return command[user_input][0]
     possible_command = difflib.get_close_matches(
-        user_input.split()[0], command_dict, cutoff=0.55)
+        user_input.split()[0], command, cutoff=0.55)
     if possible_command:
         return f'Wrong command. Maybe you mean: {", ".join(possible_command)}'
     else:
@@ -206,11 +206,11 @@ def instruction(command_dict):
     console.print(table)
 
 
-def parser_input(user_input: str, command_dict):
+def parser_input(user_input: str, command):
     command = None
     arguments = ''
 
-    for key in command_dict.keys():
+    for key in command.keys():
         if user_input.startswith(key):
             command = key
             arguments = user_input.replace(key, '').strip().split()
