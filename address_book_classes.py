@@ -40,7 +40,7 @@ class Phone(Field):
                 self.values = value
             else:
                 self.values = input(
-                    'Please enter phone number in format +380998887722 (\'+\' symbol and 12 digits)' )
+                    'Please enter phone number in format +380998887722 (\'+\' symbol and 12 digits)')
             try:
                 for number in self.values.split(' '):
                     if re.match(r'^\+\d{12}$', number) or number == '':
@@ -108,7 +108,9 @@ class Email(Field):
             else:
                 self.value = input("Email: ")
             try:
-                if re.match (r"^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$", self.value) or self.value == '':
+                if re.match(
+                        r"^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$",
+                        self.value) or self.value == '':
                     break
                 else:
                     raise ValueError
@@ -144,7 +146,8 @@ class Note(Field):
 
 class Record:
 
-    def __init__(self, name: Name, phone: Phone = None, birthday: Birthday = None, email: Email = None, address: Address = None, note: Note = None) -> None:
+    def __init__(self, name: Name, phone: Phone = None, birthday: Birthday = None, email: Email = None,
+                 address: Address = None, note: Note = None) -> None:
         self.name = name
         self.phones = []
         self.birthday = birthday
@@ -192,7 +195,7 @@ class Record:
         now = datetime.now()
         then = datetime.strptime(str_date, "%Y-%m-%d")
         delta1 = datetime(now.year, then.month, then.day)
-        delta2 = datetime(now.year+1, then.month, then.day)
+        delta2 = datetime(now.year + 1, then.month, then.day)
         result = ((delta1 if delta1 >= now else delta2) - now).days
         return result
 
@@ -340,7 +343,7 @@ class AddressBook(UserDict):
         for key, value in congratulate.items():
             if len(value):
                 result.append(f"{key}: {', '.join(value)}")
-        return '! Do not forget to congratulate !\n'+'_' * 59 + '\n' + '\n'.join(result) + '\n' + '_' * 59
+        return '! Do not forget to congratulate !\n' + '_' * 59 + '\n' + '\n'.join(result) + '\n' + '_' * 59
 
     def show_all_address_book(self):
         console = Console()
@@ -366,7 +369,15 @@ class AddressBook(UserDict):
         console.print(table)
         return "Success!\n"
 
-    def search(self, string: str):
+    def search(self, s: str):
+        """Used to search for a specific contact in the address book based on a given search term
+
+        Parameters
+        ----------
+        s : str
+            a string representing the search term
+        """
+
         output = []
         result_dict = AddressBook()
         for key in self.keys():
@@ -382,7 +393,7 @@ class AddressBook(UserDict):
             address = rec.address
             note = rec.note
 
-            if string in str(rec.name) or string in phone or string in show_birthday or string in emails or string in address or string in note:
+            if s in str(rec.name) or s in phone or s in show_birthday or s in emails or s in address or s in note:
                 output.append(rec)
                 for item in output:
                     result_dict[item.name] = item

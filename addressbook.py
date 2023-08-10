@@ -5,7 +5,6 @@ from rich.table import Table
 from address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
 from datetime import date, timedelta, datetime
 
-
 address_book = AddressBook()
 filename = 'address_book'
 
@@ -21,6 +20,7 @@ def input_errors(func):
                 return error_message
             else:
                 return "Wrong input"
+
     return wrapper
 
 
@@ -43,48 +43,47 @@ def add(*args):
 
 @input_errors
 def edit_contacts(*args):
-        
-        name = input('Contact name: ')
-        if name not in address_book.keys():
-            return "\nThis name not exist! Use 'show all' to show contacts...\n"
-        else:        
-            parameter = input('Which parameter to edit(phones, birthday, email, address, note): ').strip()
-            try:
-                if parameter not in ("phones", "birthday", "email", "address", "note"):
-                    raise ValueError
-                else:
-                    new_value = input("New Value: ")
-                    res: Record = address_book.get(str(name))
+    name = input('Contact name: ')
+    if name not in address_book.keys():
+        return "\nThis name not exist! Use 'show all' to show contacts...\n"
+    else:
+        parameter = input('Which parameter to edit(phones, birthday, email, address, note): ').strip()
+        try:
+            if parameter not in ("phones", "birthday", "email", "address", "note"):
+                raise ValueError
+            else:
+                new_value = input("New Value: ")
+                res: Record = address_book.get(str(name))
 
-                try:
-                    if res:
-                        if parameter == 'birthday':
-                            new_value = Birthday(new_value).value
-                        elif parameter == 'email':
-                            parameter = 'emails'
-                            new_contact = new_value.split(' ')
-                            new_value = []
-                            for emails in new_contact:
-                                new_value.append(Email(emails).value)
-                        elif parameter == 'address':
-                            new_value = Address(new_value).value
-                        elif parameter == 'note':
-                            new_value = Note(new_value).value
-                        elif parameter == 'phones':
-                            new_contact = new_value.split(' ')
-                            new_value = []
-                            for number in new_contact:
-                                new_value.extend(Phone(number).value)
-                        if parameter in res.__dict__.keys():
-                            res.__dict__[parameter] = new_value
-                    res: Record = address_book.get(str(name))
-                    return res
-                except ValueError:
-                    print('Incorrect parameter! Please provide correct parameter')
-                except NameError:
-                    print('There is no such contact in address book!')
+            try:
+                if res:
+                    if parameter == 'birthday':
+                        new_value = Birthday(new_value).value
+                    elif parameter == 'email':
+                        parameter = 'emails'
+                        new_contact = new_value.split(' ')
+                        new_value = []
+                        for emails in new_contact:
+                            new_value.append(Email(emails).value)
+                    elif parameter == 'address':
+                        new_value = Address(new_value).value
+                    elif parameter == 'note':
+                        new_value = Note(new_value).value
+                    elif parameter == 'phones':
+                        new_contact = new_value.split(' ')
+                        new_value = []
+                        for number in new_contact:
+                            new_value.extend(Phone(number).value)
+                    if parameter in res.__dict__.keys():
+                        res.__dict__[parameter] = new_value
+                res: Record = address_book.get(str(name))
+                return res
             except ValueError:
-                return "Wrong parameter!"
+                print('Incorrect parameter! Please provide correct parameter')
+            except NameError:
+                print('There is no such contact in address book!')
+        except ValueError:
+            return "Wrong parameter!"
 
 
 @input_errors
@@ -116,6 +115,7 @@ def show_all_address_book():
     if Record.__name__:
         return address_book.show_all_address_book()
 
+
 @input_errors
 def get_days_to_birthday(*args):
     name = Name(input("Name: ")).value.strip()
@@ -123,7 +123,7 @@ def get_days_to_birthday(*args):
         res: Record = address_book.get(str(name))
         result = int(res.days_to_birthday(res.birthday)) + 1
         if result == 0:
-            return f'{name } tomorrow birthday'
+            return f'{name} tomorrow birthday'
         if result == 365:
             return f'{name} today is birthday'
         return f'{name} until the next birthday left {result} days'
@@ -134,7 +134,7 @@ def get_days_to_birthday(*args):
 def who_has_bd_n_days():
     days = input(str('How many days?\n>>> '))
     try:
-        n_days = int(days) +1
+        n_days = int(days) + 1
     except (TypeError, ValueError):
         return 'This is not a number. Give me a number of days.'
     result = []
@@ -227,7 +227,7 @@ def addressbook_starter():
         print("New address book created.")
 
     print("\n ***Hello I`m a contact book.***\n")
-    print("_"*59)
+    print("_" * 59)
     print(address_book.congratulate())
     instruction(command_dict)
 
@@ -249,7 +249,6 @@ def addressbook_starter():
                 address_book.save()
             print(result)
     address_book.save()
-
 
 
 if __name__ == "__main__":
