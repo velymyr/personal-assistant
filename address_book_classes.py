@@ -382,7 +382,7 @@ class AddressBook(UserDict):
             address = rec.address
             note = rec.note
 
-            if string in str(rec.name.lower()) or string in phone or string in show_birthday or string in emailes or string in address or string in note:
+            if string in str(rec.name) or string in phone or string in show_birthday or string in emailes or string in address or string in note:
                 output.append(rec)
             for item in output:
                 result_dict[item.name] = item
