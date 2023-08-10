@@ -143,7 +143,6 @@ class NoteBook(UserDict):
         else:
             return console.print("\n***Ooops***\nNo matching found.")
 
-
     def search_tag(self, text):
         found_tags = []
 
@@ -238,7 +237,7 @@ def search():
         search()
 
 
-def help():
+def help_menu():
     pass
 
 
@@ -248,7 +247,7 @@ note_commands = {
     "edit": [change_note, 'to edit note'],
     "search": [search, 'to search note'],
     "show all": [show_notes, 'to output all notes'],
-    'help': [help, 'to see list of commands'],
+    'help': [help_menu, 'to see list of commands'],
     "0 or exit": [exit_notes, 'to exit']
 }
 
