@@ -398,5 +398,5 @@ class AddressBook(UserDict):
                 for item in output:
                     result_dict[item.name] = item
                 return result_dict.show_all_address_book()
-            else:
-                return "\n<<< No matches found >>>\n"
+        else:
+            return "\n<<< No matches found >>>\n"
