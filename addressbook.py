@@ -48,9 +48,9 @@ def edit_contacts(*args):
         if name not in address_book.keys():
             return "\nThis name not exist! Use 'show all' to show contacts...\n"
         else:        
-            parameter = input('Which parameter to edit(name, phones, birthday, email, address, note): ').strip()
+            parameter = input('Which parameter to edit(phones, birthday, email, address, note): ').strip()
             try:
-                if parameter not in ("name", "phones", "birthday", "email", "address", "note"):
+                if parameter not in ("phones", "birthday", "email", "address", "note"):
                     raise ValueError
                 else:
                     new_value = input("New Value: ")
