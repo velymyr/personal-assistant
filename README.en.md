@@ -26,7 +26,7 @@ The project is primarily developed using Python programming language. It utilize
 Users can quickly install the PA package by executing the following command using pip:
 
 ```
-pip install mypackage #Do not forget to change name
+pip install -i https://test.pypi.org/simple/ Next-Frontier-Project==0.1.11
 ```
 
 ### Requirements

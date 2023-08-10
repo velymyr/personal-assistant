@@ -26,7 +26,7 @@
 
 
 ```sh
-pip install mypackage
+pip install -i https://test.pypi.org/simple/ Next-Frontier-Project==0.1.11
 ```
 
 
