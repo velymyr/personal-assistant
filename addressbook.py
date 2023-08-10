@@ -86,14 +86,13 @@ def edit_contacts(*args):
                     print('There is no such contact in address book!')
             except ValueError:
                 return "Wrong parameter!"
-                
 
 
 @input_errors
 def delete_record(*args):
-    name = Name(args[0])
-    if name.value in address_book:
-        del address_book[name.value]
+    name = Name(input("Name: ")).value.strip()
+    if name in address_book:
+        del address_book[name]
         return f"Contact '{name}' has been deleted from the address book."
     return f"No contact '{name}' found in the address book."
 
