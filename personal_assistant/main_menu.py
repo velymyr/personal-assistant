@@ -23,9 +23,8 @@ def menu():
 
 
         imput_console = Console()
-        text = "Type number to start:"
-        width = 35
-        panel = Panel.fit(text,width=width, subtitle_align="center")
+        text = "    Type number to start:"
+        panel = Panel(text, width=35)
         imput_console.print(panel)
         
 
@@ -49,9 +48,8 @@ def menu():
             break
         else:
             imput_console = Console()
-            text = "\Wrong number... Try again..."
-            width = 35
-            panel = Panel.fit(text,width=width, subtitle_align="center")
+            text = "  Wrong number... Try again..."
+            panel = Panel(text,width=35)
             imput_console.print(panel)
             
 
