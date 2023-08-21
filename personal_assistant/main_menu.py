@@ -2,30 +2,16 @@ from personal_assistant.sort import sorter_starter
 from personal_assistant.addressbook import addressbook_starter
 from personal_assistant.notes import notes_main as notes_starter
 from rich.console import Console
-from rich.table import Table
 from rich.panel import Panel
+from new_ABC import RichCommands
+
 
 def menu():
 
-    commands = [" 1  - AddressBook📒", " 2  - NoteBook📋",
-                " 3  - Files sorter📂", " 0  - Exit❌"]
-
     while True:
         
-        console = Console()
-        table = Table(show_header=True, header_style="bold magenta", width=35, show_lines=True)
-        table.add_column("Welcome to main menu", max_width=None)
-        table.add_row(" 1  - AddressBook📒")
-        table.add_row(" 2  - NoteBook📋")
-        table.add_row(" 3  - Files sorter📂")
-        table.add_row(" 0  - Exit❌")
-        console.print(table)
-
-
-        imput_console = Console()
-        text = "    Type number to start:"
-        panel = Panel(text, width=35)
-        imput_console.print(panel)
+        main = RichCommands()
+        main.main_menu()
         
 
         user_input = input(">>> ")
@@ -51,8 +37,8 @@ def menu():
             text = "  Wrong number... Try again..."
             panel = Panel(text,width=35)
             imput_console.print(panel)
-            
 
 
 if __name__ == '__main__':
     menu()
+1

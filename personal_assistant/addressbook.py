@@ -4,6 +4,8 @@ from rich.console import Console
 from rich.table import Table
 from personal_assistant.address_book_classes import Record, Name, Phone, Birthday, Email, Address, Note, AddressBook
 from datetime import date, timedelta, datetime
+from new_ABC import RichCommands
+
 
 address_book = AddressBook()
 filename = 'address_book'
@@ -193,17 +195,17 @@ def command_handler(user_input, command_dict):
         return 'Wrong command.'
 
 
-def instruction(command_dict):
-    console = Console()
-    table = Table(show_header=True, header_style="bold magenta",
-                  width=60, show_lines=False)
-    table.add_column("Command", max_width=None, no_wrap=False)
-    table.add_column("Description", width=20, no_wrap=False)
+# def instruction(command_dict):
+#     console = Console()
+#     table = Table(show_header=True, header_style="bold magenta",
+#                   width=60, show_lines=False)
+#     table.add_column("Command", max_width=None, no_wrap=False)
+#     table.add_column("Description", width=20, no_wrap=False)
 
-    for func_name, func in command_dict.items():
-        table.add_row(str(func_name), str(func[1]))
+#     for func_name, func in command_dict.items():
+#         table.add_row(str(func_name), str(func[1]))
 
-    console.print(table)
+#     console.print(table)
 
 
 def parser_input(user_input: str, command_dict):
@@ -229,12 +231,13 @@ def addressbook_starter():
     print("\n ***Hello I`m a contact book.***\n")
     print("_" * 59)
     print(address_book.congratulate())
-    instruction(command_dict)
+    ab_menu = RichCommands()
+    ab_menu.address_book_commands(command_dict)
 
     while True:
         user_input = input('Input a command\n>>>').lower()
         if user_input == 'help':
-            instruction(command_dict)
+            ab_menu.address_book_commands(command_dict)
         elif user_input in ("exit", "0"):
             print('Contact book closed')
             address_book.save()

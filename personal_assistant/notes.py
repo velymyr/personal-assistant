@@ -3,6 +3,7 @@ from collections import UserDict
 import pickle
 from rich.console import Console
 from rich.table import Table
+from new_ABC import RichCommands
 
 
 class Tag:
@@ -270,27 +271,28 @@ def command_handler(user_input, commands):
         return f'Wrong command.'
 
 
-def instruction(command_dict):
-    console = Console()
-    table = Table(show_header=True, header_style="bold magenta", width=60, show_lines=False)
-    table.add_column("Command", max_width=None, no_wrap=False)
-    table.add_column("Description", width=20, no_wrap=False)
+# def instruction(command_dict):
+#     console = Console()
+#     table = Table(show_header=True, header_style="bold magenta", width=60, show_lines=False)
+#     table.add_column("Command", max_width=None, no_wrap=False)
+#     table.add_column("Description", width=20, no_wrap=False)
 
-    for func_name, func in command_dict.items():
-        table.add_row(str(func_name), str(func[1]))
+#     for func_name, func in command_dict.items():
+#         table.add_row(str(func_name), str(func[1]))
 
-    console.print(table)
+#     console.print(table)
 
 
 def notes_main():
     print("\n\n***Hello I`m a notebook.***\n")
-    instruction(note_commands)
+    note_menu = RichCommands()
+    note_menu.notes_commands(note_commands)
     nb.load()
     while True:
         user_input_command = str(input("\nInput a command:\n>>>"))
         command = pars(user_input_command.lower(), note_commands)
         if user_input_command == 'help':
-            instruction(note_commands)
+            note_menu.notes_commands(note_commands)
         elif user_input_command in ("exit", "0"):
             nb.save()
             print('Notebook closed')
