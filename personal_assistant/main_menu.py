@@ -48,10 +48,12 @@ def menu():
             print('\nGoodbye!\n')
             break
         else:
-            impu_console = Console()
-            wrong_table = Table()
-            wrong_table.add_column("\nWrong number... Try again...\n")
-            imput_console.print(wrong_table)
+            imput_console = Console()
+            text = "\Wrong number... Try again..."
+            width = 35
+            panel = Panel.fit(text,width=width, subtitle_align="center")
+            imput_console.print(panel)
+            
 
 
 if __name__ == '__main__':
