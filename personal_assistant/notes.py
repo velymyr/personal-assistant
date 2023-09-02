@@ -3,10 +3,16 @@ from collections import UserDict
 import pickle
 from rich.console import Console
 from rich.table import Table
+import logging
+
+
+logger = logging.getLogger()
+stream_handler = logging.StreamHandler()
+logger.addHandler(stream_handler)
+logger.setLevel(logging.DEBUG)
 
 
 class Tag:
-
     def __init__(self, value):
         self.value = value
 
@@ -24,7 +30,6 @@ class Tag:
 
 
 class Tags:
-
     def __init__(self):
         self.tags = []
 
@@ -45,7 +50,6 @@ class Tags:
 
 
 class Note:
-
     def __init__(self, note_text):
         self.note_text = note_text
 
@@ -63,20 +67,19 @@ class Note:
 
 
 class NoteBook(UserDict):
-
     def add_note(self, note, tags):
         self.data[note] = tags
 
-    def save(self, filename='notebook_data.pkl'):
-        with open(filename, 'wb') as f:
+    def save(self, filename="notebook_data.pkl"):
+        with open(filename, "wb") as f:
             pickle.dump(self.data, f)
 
-    def load(self, filename='notebook_data.pkl'):
+    def load(self, filename="notebook_data.pkl"):
         try:
-            with open(filename, 'rb') as f:
+            with open(filename, "rb") as f:
                 data = pickle.load(f)
                 if not isinstance(data, dict):
-                    raise TypeError('Invalid data type')
+                    raise TypeError("Invalid data type")
                 self.data = data
         except (FileNotFoundError, TypeError):
             self.data = {}
@@ -84,7 +87,9 @@ class NoteBook(UserDict):
     def show_notes(self):
         n = 1
         console = Console()
-        table = Table(show_header=True, header_style="bold magenta", width=60, show_lines=True)
+        table = Table(
+            show_header=True, header_style="bold magenta", width=60, show_lines=True
+        )
         table.add_column("#", max_width=None)
         table.add_column("Note", width=20, no_wrap=False)
         table.add_column("Tags")
@@ -96,10 +101,12 @@ class NoteBook(UserDict):
         console.print(table)
 
     def edit_note(self):
-        print("\n***Edit func***")
+        logger.debug("\n***Edit func***")
         self.show_notes()
 
-        x = input("\nChoose the note you want to edit by number ('0' - to exit delete func):\n>>> ")
+        x = input(
+            "\nChoose the note you want to edit by number ('0' - to exit delete func):\n>>> "
+        )
 
         try:
             x = int(x)
@@ -108,19 +115,22 @@ class NoteBook(UserDict):
                 note_to_edit = keys[x - 1]
                 new_note = input(f"\nEnter the new content for note '{note_to_edit}': ")
                 new_tags = input(
-                    f"\nEnter the new tags for note '{note_to_edit}' (comma-separated): ").split(",")
+                    f"\nEnter the new tags for note '{note_to_edit}' (comma-separated): "
+                ).split(",")
 
                 self.data[new_note] = [tag.strip() for tag in new_tags]
                 if note_to_edit != new_note:
                     del self.data[note_to_edit]
-                print(f"\nNote '{note_to_edit}' has been updated.")
+                logger.debug(f"\nNote '{note_to_edit}' has been updated.")
             elif x == 0:
                 return 'Exit "Edit func" success'
             else:
-                print("\n***Ooops***\nInvalid input. Please choose a valid number.")
+                logger.debug(
+                    "\n***Ooops***\nInvalid input. Please choose a valid number."
+                )
                 nb.edit_note()
         except ValueError:
-            print("\n***Ooops***\nInvalid input. Please enter a number.")
+            logger.debug("\n***Ooops***\nInvalid input. Please enter a number.")
             nb.edit_note()
 
     def search_note(self, text):
@@ -130,12 +140,14 @@ class NoteBook(UserDict):
                 found_fields.append((key, value))
 
         console = Console()
-        table = Table(show_header=True, header_style="bold magenta", width=60, show_lines=True)
+        table = Table(
+            show_header=True, header_style="bold magenta", width=60, show_lines=True
+        )
         table.add_column("Note", width=20, no_wrap=False)
         table.add_column("Tags")
 
         for obj in found_fields:
-            str_tags = ", ".join(obj[1])
+            str_tags = ", ".join([str(tag) for tag in obj[1]])
             table.add_row(str(obj[0]), str_tags)
 
         if found_fields:
@@ -147,12 +159,14 @@ class NoteBook(UserDict):
         found_tags = []
 
         for key, value in self.items():
-            tag_lst = ', '.join(str(v) for v in value)
+            tag_lst = ", ".join(str(v) for v in value)
             if text in tag_lst:
                 found_tags.append((str(key), tag_lst))
 
         console = Console()
-        table = Table(show_header=True, header_style="bold magenta", width=60, show_lines=True)
+        table = Table(
+            show_header=True, header_style="bold magenta", width=60, show_lines=True
+        )
         table.add_column("Key", width=20, no_wrap=False)
         table.add_column("Tags")
 
@@ -169,14 +183,16 @@ nb = NoteBook()
 
 
 def add_note():
-    user_input_note = input('\n***Add func***\nInput your note ("0" - to exit delete func):\n>>>')
+    user_input_note = input(
+        '\n***Add func***\nInput your note ("0" - to exit delete func):\n>>>'
+    )
     if user_input_note == "0":
         return 'Exit "Add func" success'
     elif not user_input_note:
-        print("\nEmpty note not allowed")
+        logger.debug("\nEmpty note not allowed")
         add_note()
     else:
-        user_input_tags = input('\nInput tags for a note (space-separated):\n>>>')
+        user_input_tags = input("\nInput tags for a note (space-separated):\n>>>")
         user_input_tags = user_input_tags.strip().split()
         tags = Tags()
         for user_tag in user_input_tags:
@@ -191,7 +207,9 @@ def add_note():
 def delete_note():
     nb.show_notes()
 
-    x = input("\n***Delete func***\nChoose the note you want to delete by number ('0' - to exit delete func):\n>>> ")
+    x = input(
+        "\n***Delete func***\nChoose the note you want to delete by number ('0' - to exit delete func):\n>>> "
+    )
 
     try:
         x = int(x)
@@ -199,14 +217,14 @@ def delete_note():
         if 1 <= x <= len(keys):
             note_to_delete = keys[x - 1]
             del nb.data[note_to_delete]
-            print(f"\nNote '{note_to_delete}' has been deleted.")
+            logger.debug(f"\nNote '{note_to_delete}' has been deleted.")
         elif x == 0:
             return 'Exit "Delete func" success'
         else:
-            print("\n***Ooops***\nInvalid input. Please enter a valid number.")
+            logger.debug("\n***Ooops***\nInvalid input. Please enter a valid number.")
             delete_note()
     except ValueError:
-        print("\n***Ooops***\nInvalid input. Please enter a number.")
+        logger.debug("\n***Ooops***\nInvalid input. Please enter a number.")
         delete_note()
 
 
@@ -223,17 +241,19 @@ def show_notes():
 
 
 def search():
-    user_choice = input("\n***Search***\nEnter '1' to search in note\nEnter '2' to search in tags\n>>>")
+    user_choice = input(
+        "\n***Search***\nEnter '1' to search in note\nEnter '2' to search in tags\n>>>"
+    )
     if user_choice == "1" or user_choice == "2":
         search_key = input("Enter a search keyword\n>>>")
-        if user_choice == '1':
+        if user_choice == "1":
             return nb.search_note(search_key)
-        elif user_choice == '2':
+        elif user_choice == "2":
             return nb.search_tag(search_key)
         else:
             return "Wrong input"
     else:
-        print("\n***Ooops***\nWrong input")
+        logger.debug("\n***Ooops***\nWrong input")
         search()
 
 
@@ -242,13 +262,13 @@ def help_menu():
 
 
 note_commands = {
-    "add": [add_note, 'to add note'],
-    "delete": [delete_note, 'to delete note'],
-    "edit": [change_note, 'to edit note'],
-    "search": [search, 'to search note'],
-    "show all": [show_notes, 'to output all notes'],
-    'help': [help_menu, 'to see list of commands'],
-    "0 or exit": [exit_notes, 'to exit']
+    "add": [add_note, "to add note"],
+    "delete": [delete_note, "to delete note"],
+    "edit": [change_note, "to edit note"],
+    "search": [search, "to search note"],
+    "show all": [show_notes, "to output all notes"],
+    "help": [help_menu, "to see list of commands"],
+    "0 or exit": [exit_notes, "to exit"],
 }
 
 
@@ -267,12 +287,14 @@ def command_handler(user_input, commands):
     if possible_command:
         return f'Wrong command. Maybe you mean: {", ".join(possible_command)}'
     else:
-        return f'Wrong command.'
+        return f"Wrong command."
 
 
 def instruction(command_dict):
     console = Console()
-    table = Table(show_header=True, header_style="bold magenta", width=60, show_lines=False)
+    table = Table(
+        show_header=True, header_style="bold magenta", width=60, show_lines=False
+    )
     table.add_column("Command", max_width=None, no_wrap=False)
     table.add_column("Description", width=20, no_wrap=False)
 
@@ -283,19 +305,19 @@ def instruction(command_dict):
 
 
 def notes_main():
-    print("\n\n***Hello I`m a notebook.***\n")
+    logger.debug("\n\n***Hello I`m a notebook.***\n")
     instruction(note_commands)
     nb.load()
     while True:
         user_input_command = str(input("\nInput a command:\n>>>"))
         command = pars(user_input_command.lower(), note_commands)
-        if user_input_command == 'help':
+        if user_input_command == "help":
             instruction(note_commands)
         elif user_input_command in ("exit", "0"):
             nb.save()
-            print('Notebook closed')
+            logger.debug("Notebook closed")
             break
-        elif user_input_command == 'show all':
+        elif user_input_command == "show all":
             show_notes()
         else:
             if command in note_commands:
@@ -304,7 +326,7 @@ def notes_main():
                 result = command_handler(user_input_command, note_commands)
             nb.save()
             if result:
-                print(result)
+                logger.debug(result)
 
 
 if __name__ == "__main__":
