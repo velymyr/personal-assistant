@@ -109,7 +109,7 @@ class Email(Field):
                 self.value = input("Email: ")
             try:
                 if re.match(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$",
-                        self.value) or self.value == '':
+                            self.value) or self.value == '':
                     break
                 else:
                     raise ValueError
@@ -236,6 +236,16 @@ class Record:
         return f"{phone} not present in phones of contact {self.name}"
 
 
+def get_current_week():
+    now = datetime.now()
+    current_weekday = now.weekday()
+    if current_weekday < 5:
+        week_start = now - timedelta(days=2 + current_weekday)
+    else:
+        week_start = now - timedelta(days=current_weekday - 5)
+    return [week_start.date(), week_start.date() + timedelta(days=7)]
+
+
 class AddressBook(UserDict):
 
     def add_record(self, record: Record):
@@ -303,24 +313,6 @@ class AddressBook(UserDict):
             self.data = pickle.load(file)
         return self.data
 
-    def get_current_week(self):
-        now = datetime.now()
-        current_weekday = now.weekday()
-        if current_weekday < 5:
-            week_start = now - timedelta(days=2 + current_weekday)
-        else:
-            week_start = now - timedelta(days=current_weekday - 5)
-        return [week_start.date(), week_start.date() + timedelta(days=7)]
-
-    def get_current_week(self):
-        now = datetime.now()
-        current_weekday = now.weekday()
-        if current_weekday < 5:
-            week_start = now - timedelta(days=2 + current_weekday)
-        else:
-            week_start = now - timedelta(days=current_weekday - 5)
-        return [week_start.date(), week_start.date() + timedelta(days=7)]
-
     def congratulate(self):
         result = []
         weekdays = ['Monday', 'Tuesday', 'Wednesday',
@@ -333,7 +325,7 @@ class AddressBook(UserDict):
             if rec.birthday != "":
                 new_birthday = rec.birthday.replace(year=current_year)
                 birthday_weekday = new_birthday.weekday()
-                if self.get_current_week()[0] <= new_birthday < self.get_current_week()[1]:
+                if get_current_week()[0] <= new_birthday < get_current_week()[1]:
                     if birthday_weekday < 5:
                         congratulate[weekdays[birthday_weekday]].append(
                             rec.name)

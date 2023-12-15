@@ -195,8 +195,7 @@ def command_handler(user_input, command_dict):
 
 def instruction(command_dict):
     console = Console()
-    table = Table(show_header=True, header_style="bold magenta",
-                  width=60, show_lines=False)
+    table = Table(show_header=True, header_style="bold magenta", width=60, show_lines=False)
     table.add_column("Command", max_width=None, no_wrap=False)
     table.add_column("Description", width=20, no_wrap=False)
 
